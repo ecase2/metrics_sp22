@@ -1,9 +1,9 @@
-PWD /Users/emilycase/Desktop/metrics sp22/ps1_matt
+PWD /Users/emilycase/Desktop/metrics_sp22/ps1_matt
 INPUT /usr/local/texlive/2021/texmf.cnf
 INPUT /usr/local/texlive/2021/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2021/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.tex
-OUTPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.log
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.tex
+OUTPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.log
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/article.cls
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/article.cls
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/article.cls
@@ -21,10 +21,10 @@ INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/size12.clo
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/base/size12.clo
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/../../tex/preamble_basic.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/../../tex/preamble_basic.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/../../tex/preamble_basic.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/../../tex/preamble_basic.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/../../tex/preamble_basic.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/../../tex/preamble_basic.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/../../tex/preamble_basic.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/../../tex/preamble_basic.tex
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/xcolor/xcolor.sty
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/xcolor/xcolor.sty
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/xcolor/xcolor.sty
@@ -274,10 +274,10 @@ INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-pdftex.de
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT /usr/local/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.aux
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.aux
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.aux
-OUTPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.aux
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.aux
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.aux
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.aux
+OUTPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.aux
 INPUT /usr/local/texlive/2021/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/local/texlive/2021/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/local/texlive/2021/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -310,51 +310,51 @@ INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmex10.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
-INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex
-OUTPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.pdf
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex
+OUTPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.pdf
 INPUT /usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmex10.tfm
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/e.p_estimates.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/e.p_estimates.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/e.p_estimates.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/e.p_estimates.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/mu_id.png
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/mu_id.png
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/mu_id.png
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/mu_id.png
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/mu_id.png
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/rho_id.png
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/rho_id.png
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/rho_id.png
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/rho_id.png
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/rho_id.png
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/g.table.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/g.table.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/g.table.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/g.table.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/h.mw.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/h.mw.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/h.mw.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/h.mw.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/h.table.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/h.table.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/h.table.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/output/h.table.tex
-INPUT /Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.aux
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/e.p_estimates.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/e.p_estimates.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/e.p_estimates.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/e.p_estimates.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/mu_id.png
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/mu_id.png
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/mu_id.png
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/mu_id.png
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/mu_id.png
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/rho_id.png
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/rho_id.png
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/rho_id.png
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/rho_id.png
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/rho_id.png
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/g.table.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/g.table.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/g.table.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/g.table.tex
+INPUT /usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/h.mw.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/h.mw.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/h.mw.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/h.mw.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/h.table.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/h.table.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/h.table.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/h.table.tex
+INPUT /Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.aux
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 INPUT /usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb

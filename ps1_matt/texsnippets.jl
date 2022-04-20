@@ -54,8 +54,8 @@ for p = 1:1:2
         w  = θ_0.μ_1                    #   parameters fixed
         st = 0.4                        # start for the loop
         en = 1.5                        # end for the loop
-        ysize = [1900, 4000]            # y coordinates size
-        xsize = [0.3, en]               # x coordinates size
+        ysize = [1900, 3000]            # y coordinates size
+        xsize = [0.5, en]               # x coordinates size
     else
         gname = L"$\rho$"
         fname = "rho"
@@ -63,7 +63,7 @@ for p = 1:1:2
         w  = θ_0.ρ
         st = -1.0
         en = 1.0
-        ysize = [1950,2150]
+        ysize = [1850,2000]
         xsize = [-0.5,1.0]
     end 
 

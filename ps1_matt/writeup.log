@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2022.1.8)  19 APR 2022 17:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2022.1.8)  20 APR 2022 14:21
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**"/Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.tex"
-(/Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.tex
+**/Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.tex
+(/Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.tex
 LaTeX2e <2020-10-01> patch level 4
 L3 programming layer <2021-02-18> (/usr/local/texlive/2021/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2020/04/10 v1.4m Standard LaTeX document class
@@ -22,7 +22,7 @@ File: size12.clo 2020/04/10 v1.4m Standard LaTeX file (size option)
 \abovecaptionskip=\skip47
 \belowcaptionskip=\skip48
 \bibindent=\dimen138
-) (/Users/emilycase/Desktop/metrics sp22/ps1_matt/../../tex/preamble_basic.tex (/usr/local/texlive/2021/texmf-dist/tex/latex/xcolor/xcolor.sty
+) (/Users/emilycase/Desktop/metrics_sp22/ps1_matt/../../tex/preamble_basic.tex (/usr/local/texlive/2021/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
  (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
@@ -185,7 +185,7 @@ Package: titlesec 2019/10/16 v2.13 Sectioning titles
 File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count277
 \l__pdf_internal_box=\box51
-) (/Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.aux)
+) (/Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.aux)
 \openout1 = `writeup.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 5.
@@ -255,7 +255,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-(/Users/emilycase/Desktop/metrics sp22/ps1_matt/output/c.tex)
+(/Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/c.tex)
 Overfull \hbox (48.48297pt too wide) detected at line 26
 []
  []
@@ -267,7 +267,7 @@ Overfull \hbox (82.5155pt too wide) detected at line 48
 
 [1
 
-{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (/Users/emilycase/Desktop/metrics sp22/ps1_matt/output/e.p_estimates.tex)
+{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (/Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/e.p_estimates.tex)
 <output/mu_id.png, id=15, 602.25pt x 501.875pt>
 File: output/mu_id.png Graphic file (type png)
 <use output/mu_id.png>
@@ -278,17 +278,17 @@ File: output/rho_id.png Graphic file (type png)
 <use output/rho_id.png>
 Package pdftex.def Info: output/rho_id.png  used on input line 61.
 (pdftex.def)             Requested size: 301.12425pt x 250.93687pt.
- [2 </Users/emilycase/Desktop/metrics sp22/ps1_matt/output/mu_id.png>] (/Users/emilycase/Desktop/metrics sp22/ps1_matt/output/g.table.tex) (/Users/emilycase/Desktop/metrics sp22/ps1_matt/output/h.mw.tex) (/Users/emilycase/Desktop/metrics sp22/ps1_matt/output/h.table.tex) [3 </Users/emilycase/Desktop/metrics sp22/ps1_matt/output/rho_id.png>] [4] (/Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.aux) ) 
+ [2 </Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/mu_id.png>] (/Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/g.table.tex) (/Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/h.mw.tex) (/Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/h.table.tex) [3 </Users/emilycase/Desktop/metrics_sp22/ps1_matt/output/rho_id.png>] [4] (/Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.aux) ) 
 Here is how much of TeX's memory you used:
  3768 strings out of 478994
- 52069 string characters out of 5858185
+ 52063 string characters out of 5858185
  371335 words of memory out of 5000000
  21204 multiletter control sequences out of 15000+600000
  408818 words of font info for 46 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 73i,12n,77p,807b,251s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 73i,13n,77p,805b,259s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
-Output written on "/Users/emilycase/Desktop/metrics sp22/ps1_matt/writeup.pdf" (4 pages, 175739 bytes).
+Output written on /Users/emilycase/Desktop/metrics_sp22/ps1_matt/writeup.pdf (4 pages, 155573 bytes).
 PDF statistics:
  59 PDF objects out of 1000 (max. 8388607)
  40 compressed objects within 1 object stream

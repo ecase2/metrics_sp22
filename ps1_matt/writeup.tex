@@ -5,7 +5,7 @@
 \begin{document}
 
 \subsection*{(a) normalize prices}
-We can normalize $\pi_1 = \pi_2 = 1$ without loss of generality because \fix{reason}. 
+We can normalize $\pi_1 = \pi_2 = 1$ without loss of generality because we are using logs, and it will enter as a ``level.'' It is kind of like a parallel shift that we can account for in $\mu_i$ for job type $i$.  
 
 \subsection*{(b) simulate data}
 I simulate data for $N=1000$ observations. See attached Julia code. 
@@ -62,6 +62,7 @@ which is consistent.
 \end{center}
 
 \subsection*{(g) compare the data to the model}
+Based on Table 1, it looks like MLE can estimate the true parameters pretty accurately.
 \input{output/g.table.tex}
 
 \subsection*{(h) counterfactual}

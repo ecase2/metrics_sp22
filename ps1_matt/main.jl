@@ -97,5 +97,3 @@ data_cf.switch = convert(Vector{Int64}, data_cf.switch)
     std_w_2_cf  = std(data_cf[data_cf.d_cf .==0, :w_cf])
 
 
-### run the tables and graphs ###
-include("texsnippets.jl")
