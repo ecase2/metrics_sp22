@@ -1,0 +1,45 @@
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Problem 12: probit models \label{q12}}
+\begin{tabular}{l*{2}{c}}
+\toprule
+     &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}\\
+     &\multicolumn{1}{c}{no interaction}&\multicolumn{1}{c}{interaction}\\
+\midrule
+Client took a loan&                     &                     \\
+Client age&      0.0002         &      0.0009         \\
+     &    (0.0086)         &    (0.0087)         \\
+\addlinespace
+Client marital status=1&      0.0495         &      0.1557         \\
+     &    (0.2141)         &    (0.2807)         \\
+\addlinespace
+Client education&     -0.0146         &     -0.0154         \\
+     &    (0.0166)         &    (0.0167)         \\
+\addlinespace
+Household size&     -0.0476         &     -0.0502         \\
+     &    (0.0379)         &    (0.0381)         \\
+\addlinespace
+Household income&      0.0000         &      0.0000         \\
+     &    (0.0000)         &    (0.0000)         \\
+\addlinespace
+Client is Muslim=1&     -0.0326         &      0.2059         \\
+     &    (0.1468)         &    (0.4206)         \\
+\addlinespace
+Client is Hindi&     -0.1100         &     -0.1143         \\
+     &    (0.2152)         &    (0.2153)         \\
+\addlinespace
+Treated&      0.1751         &      0.1820         \\
+     &    (0.1419)         &    (0.1424)         \\
+\addlinespace
+Client marital status=1 $\times$ Client is Muslim=1&                     &     -0.2709         \\
+     &                     &    (0.4481)         \\
+\addlinespace
+Constant&     -0.8527         &     -0.9589         \\
+     &    (0.4592)         &    (0.4939)         \\
+\midrule
+Observations&         532         &         532         \\
+\bottomrule
+\multicolumn{3}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{3}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+\end{table}

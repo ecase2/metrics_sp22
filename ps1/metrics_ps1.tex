@@ -1,0 +1,132 @@
+\documentclass[11pt]{article}
+\input{tex/preamble_basic}
+\usepackage{palatino} % font
+%\usepackage{mathptmx} % font 
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{dcolumn}
+\usepackage{booktabs}
+\usepackage{appendix}
+\usepackage{titlesec} % what does this do?
+\usepackage{setspace} % double spacing
+					  % use \doublespacing
+
+\setlength{\parindent}{0pt}
+
+\definecolor{blue}{RGB}{0,114,178}
+\newcommand{\tabref}[1]{Table \ref{#1}}
+
+
+% title stuff:
+\title{Econ 717: problem set 1}
+\author{Emily Case}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+
+
+\section*{Problem 1}
+%%\textbf{Drop observations with missing values of client age or client marital status or client education or client household income.}\\\\
+
+
+
+\section*{Problem 2}
+%%\textbf{Estimate a linear probability model with loan take-up as the dependent variable. Estimate the model without the robust option. Report and discuss the coefficient estimates.}\\\\
+(\tabref{q5}, column (1)) There is a negative relationship between new loan take up and client age (though it's very small), client education, household size, Muslim, and Hindi. Though none of the coefficients are statistically significant, the constant term seems to have the highest impact on new loan take up, implying that unmarried, uneducated, young, non-Muslim and non-Hindi households that are small and poor are most likely to take up a new loan. 
+% \input{results/q2}
+
+
+
+\section*{Problem 3}
+%%\textbf{Repeat the estimation in Problem 2 with the robust option. How big are the differences, if any? Which standard errors are larger?} \\\\
+Table \ref{q5} column (2)  compares the results from problems 2 and 3. notice that the robust standard errors are larger for client age, household size, household income, and the constant. Although, it seems these differences are not huge, which might mean there is not much heteroskedasciticy.
+%\input{results/q3}
+
+
+
+\section*{Problem 4}
+%%\textbf{Generate predicted probabilities of loan take-up using the estimated coefficients from Problem 2. Do any of these probabilities lie outside [0, 1]? If so, do the observations corresponding to these values show any particular patterns in the values of the variables?}\\\\
+The minimum value is about 0.058, and the maximum is 0.282; none of the predicted probabilities lie outside of [0,1].
+
+
+\newpage
+\section*{Problem 5}
+%%\textbf{Estimate the model by weighted least squares using Stata’s vwls 
+%	(variance weighted least squares) command. How much do the 
+%	coefficients differ from those obtained without weighting?
+%	How much do the standard errors differ from those produced by the 
+%	robust option?}\\\\
+Results are in \tabref{q5}, column (3). The coefficients are the same, and the standard error results are not that different from the results in (1) or (2). 
+\input{results/q5}
+
+
+
+\newpage
+\section*{Problem 6}
+%%\textbf{Estimate probit and logit models of loan take-up using the same 
+%	independent variables as in Problem 2. Are the probit and logit 
+%	coefficient estimates similar to one another and to the LPM 
+%	estimates?}\\\\
+Results are in \tabref{q6}, columns (3) and (4). They should not be the same as the LPM estimates because the coefficients that probit and logit spit out are not the conditional probability, as they are with LPM. They are not completely different, but there are clearly differences between probit and logit as well. 
+\input{results/q6}
+
+\newpage
+\section*{Problem 7}
+%%\textbf{...}\\\\
+The derivatives mean the change in the conditional probability of new loan take up resulting from a small change in client age. Results are below. The partial derivatives in all cases are pretty similar to each other. 
+\\\\
+\begin{center}
+\input{results/q7a}
+\end{center}
+\input{results/q7b}
+
+\newpage
+\section*{Problem 8}
+%%\textbf{...}\\\\
+The LPM derivative is much higher than the probit one.\footnote{I am pretty sure I did this wrong.}
+\input{results/q8}
+
+
+\section*{Problem 9}
+%%\textbf{...}\\\\
+I get an LRI of 0.009, which is very low, suggesting that the model does not do a good job of explaining new loan take up. 
+
+
+\section*{Problem 10}
+%%\textbf{...}\\\\
+Since the maximum value of the predicted probabilities was lower than 0.5, it makes sense that using 0.5 as a cut off would yield a 0\% correct prediction rate. When changing it to the loan take up fraction (about 0.16), the correct prediction rate is about 51\%. 
+\input{results/q10}
+
+\newpage
+\section*{Problem 11}
+%%\textbf{...}\fix{266 observations deleted}\\\\
+The result of the same method, but with a subsample of the dataset, is not too different, which is what we would want to see. 
+\input{results/q11}
+
+\newpage
+\section*{Problem 12}
+%%\textbf{...}\\\\
+\input{results/q12}
+
+\newpage 
+\section*{Problem 13}
+%%\textbf{...}\\\\
+\input{results/q13}
+
+\section*{Problem 14}
+I include the standard error in Table \ref{q13} from problem 13. 
+
+
+\section*{Problem 15}
+We are interested if the covariates help explain the variation in the estimated squared residuals.  In Table \ref{q16}, since the $R^2$ is the same for both LPM and the model with squared residuals, we do not see evidence for heteroskedasticity.
+
+
+\section*{Problem 16}
+Since the coefficients in column (4) of Table \ref{q16} are very different from the probit model before allowing for heteroskedasticity, we can infer that there is evidence for heteroskedasticity.\footnote{I did not really understand how to read the results for problems 15 or 16.}
+\input{results/q16}
+
+\end{document}

@@ -1,0 +1,74 @@
+\documentclass[12pt]{article}
+
+\input{../../tex/preamble_basic.tex}
+
+\begin{document}
+
+\subsection*{(a) normalize prices}
+We can normalize $\pi_1 = \pi_2 = 1$ without loss of generality because \fix{reason}. 
+
+\subsection*{(b) simulate data}
+I simulate data for $N=1000$ observations. See attached Julia code. 
+
+\subsection*{(c) choose true parameters}
+\input{output/c}
+
+\subsection*{(d) maximum likelihood estimator}
+I choose to do maximum likelihood estimation. Define $\Omega$ as the data available to the econometrician, then the likelihood function is 
+\begin{align*}
+    L(\theta | \Omega ) & = \Pi_{i = 1}^N Pr(w = w_1, d = 1)^d Pr(w = w_0, d = 0)^{1-d}
+    \\
+    & = \Pi_{i = 1}^N Pr(w = \pi_1 s_1, \pi_1 s_1 > \pi_2 s_2)^d 
+                      Pr(w = \pi_2 s_2, \pi_2 s_2 > \pi_1 s_1)^{1-d}
+    \\
+    & = \Pi_{i = 1}^N Pr(w = \pi_1 e^{\mu_1 + \epsilon_1}, \pi_1 e^{\mu_1 + \epsilon_1} > \pi_2 e^{\mu_2 + \epsilon_2})^d 
+                      Pr(w = \pi_2 e^{\mu_2 + \epsilon_2}, \pi_2 e^{\mu_2 + \epsilon_2} > \pi_1 e^{\mu_1 + \epsilon_1})^{1-d}
+\end{align*}
+I will show the simplification for one of the probabilities, but the steps are pretty much the same for each. We want to ``solve'' for the $\epsilon$'s, since we know their distributions (assuming our assumptions are the truth, that is):
+\begin{align*}
+    & = Pr(w = \pi_1 e^{\mu_1 + \epsilon_1},\; \pi_1 e^{\mu_1 + \epsilon_1} > \pi_2 e^{\mu_2 + \epsilon_2})
+    \\
+    & = Pr(\epsilon_1 = \log\big(\frac{w}{\pi_1}\big)-\mu_1,\; 
+        \epsilon_2 < \log(\frac{\pi_1}{\pi_2}) +\mu_1 -\mu_2+\epsilon_1 )
+    \\
+    & = Pr(\epsilon_2 < \log\big(\frac{\pi_1}{\pi_2}\big) +\mu_1 -\mu_2+\epsilon_1 | \epsilon_1 = \log\big(\frac{w}{\pi_1}\big)-\mu_1) \times
+        Pr(\epsilon_1 = \log\big(\frac{w}{\pi_1}\big)-\mu_1)
+    \\
+    & = Pr(\epsilon_2 < \log\big( \frac{w}{\pi_2} \big) - \mu_2 | \epsilon_1 ) 
+        \times Pr(\epsilon_1 = \log\big(\frac{w}{\pi_1}\big)-\mu_1)
+\end{align*}
+
+since joint distributions can be written as the multiplication of a conditional and a marginal. Note that 
+\[ \epsilon_2|\epsilon_1 \sim N \big(\frac{\sigma_{12}}{\sigma_2^2} \epsilon_1,
+    \sigma_1^2 - \frac{\sigma_{12}^2}{\sigma_2^2}\big) \]
+then the likelihood function becomes 
+\[L =  \Pi_{i = 1}^N \bigg[ F_{\epsilon_2 |\epsilon_1} \bigg(\log \big(\frac{w}{\pi_2}\big) - \mu_2\bigg)f_{\epsilon_1} \bigg(\log \big(\frac{w}{\pi_1}\big) - \mu_1 \bigg)\bigg]^d 
+\times  
+\bigg[ F_{\epsilon_1 |\epsilon_2} \bigg(\log \big(\frac{w}{\pi_1}\big) - \mu_1\bigg) f_{\epsilon_2} \bigg(\log \big(\frac{w}{\pi_2}\big) - \mu_2 \bigg)\bigg]^{1-d}
+    \]
+And the estimator is 
+\[ \hat\theta = argmax_{\theta} \log(L)\]
+which is consistent. 
+
+
+\subsection*{(e) estimate $\mu_1$ and $\rho$ }    
+\input{output/e.p_estimates.tex}
+
+\subsection*{(f) identification figures}
+\begin{center}
+\includegraphics[scale = 0.5]{output/mu_id.png}
+\\
+\includegraphics[scale = 0.5]{output/rho_id.png}
+\end{center}
+
+\subsection*{(g) compare the data to the model}
+\input{output/g.table.tex}
+
+\subsection*{(h) counterfactual}
+Suppose that there is a minimum wage of 
+\input{output/h.mw.tex}
+The resulting changes are in Table 2, and we see that the average wage for those choosing job 1 is decreasing, though not by much. The average wage for those choosing job 2 increased. This might feel counterintuitive, since we raised the $w_1$ that some individuals might face. However there are some individuals who, before the minimum wage, faced $w_1 < w_2 < \underline{w_1}$, so originally they choose the second job. These were individuals who were pretty low skilled in job 2, and due to correlation, also low waged in job 1, but who are now going to migrate to job 1, bringing the average wage and average skill level down. When low-skilled workers leave job 2, the remaining high-skilled workers bring the average job 2 wage up higher. 
+\input{output/h.table.tex}
+
+
+\end{document}

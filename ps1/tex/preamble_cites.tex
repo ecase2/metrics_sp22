@@ -1,0 +1,14 @@
+% add to preamble for papers which need references etc:
+	% includes citation stuff and bibliography stuff, and hyperlinks. 
+
+\usepackage{hyperref}
+    % \hyperlink{label}{link caption} is the link
+    % \hypertarget{label}{target caption}
+    
+\usepackage{natbib} % to have a bibliography 
+	\bibliographystyle{aer}
+
+\definecolor{red}{RGB}{213,94,0}
+\newcommand{\tocite}{\textcolor{red}{\textbf{(citation here)}}}
+
+\def\citeapos#1{\citeauthor{#1}'s \citeyear{#1}} % to cite possessively 

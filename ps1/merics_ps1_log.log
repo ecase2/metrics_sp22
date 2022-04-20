@@ -1,0 +1,1356 @@
+-------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/emilycase/Desktop/metrics sp22/ps1/merics_ps1_log.log
+  log type:  text
+ opened on:  16 Feb 2022, 12:49:58
+
+. 
+. clear all
+
+. cd "/Users/emilycase/Desktop/metrics sp22/ps1"
+/Users/emilycase/Desktop/metrics sp22/ps1
+
+. 
+. use field_sample_data //i renamed the data
+(ATTENTION: Type notes in the command line for information on this dataset)
+
+. rename *, lower           //aesthetic preferences matter
+
+. keep imidlineid taken_new client_age client_married client_education hh_size hh_income muslim h
+> indu_sc_kat treated miss_client_age miss_client_education miss_client_married
+
+. 
+. * make shorter variable labels, for LaTeX tables' sake
+. la var client_age "Client age"
+
+. la var client_married "Client marital status"
+
+. la var client_education "Client education"
+
+. la var hh_size "Household size"
+
+. la var hh_income "Household income"
+
+. la var muslim "Client is Muslim"
+
+. la var hindu_sc_kat "Client is Hindi"
+
+. la var treated "Treated"
+
+. la var taken_new "Client took a loan"
+
+. 
+. * global list of variables, starting with dependent (less typing = good)
+. global vars "taken_new client_age client_married client_education hh_size hh_income muslim hind
+> u_sc_kat treated"
+
+. 
+. 
+. *****************
+. *       problem 1   *
+. *****************
+. 
+. drop if miss_client_married   == 1
+(45 observations deleted)
+
+. drop if miss_client_education == 1
+(20 observations deleted)
+
+. drop if miss_client_age           == 1
+(0 observations deleted)
+
+. drop if hh_income                         == .
+(0 observations deleted)
+
+. 
+. 
+. *****************
+. *       problem 2   *
+. *****************
+. /*
+>         Estimate a linear probability model with loan 
+>         take-up as the dependent variable and client age, client marital 
+>         status, client years of schooling, client household size, client 
+>         household income, indicators for Muslim and Hindu scheduled caste, 
+>         and experimental treatment status. Estimate the model without the 
+>         robust option. Report and discuss the coefficient estimates.
+> */
+. 
+. eststo clear //start from a blank slate
+
+. eststo lpm: reg $vars 
+
+      Source |       SS           df       MS      Number of obs   =       532
+-------------+----------------------------------   F(8, 523)       =      0.52
+       Model |  .586701556         8  .073337695   Prob > F        =    0.8405
+    Residual |  73.5242007       523  .140581646   R-squared       =    0.0079
+-------------+----------------------------------   Adj R-squared   =   -0.0073
+       Total |  74.1109023       531  .139568554   Root MSE        =    .37494
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |  -.0000283   .0021572    -0.01   0.990     -.004266    .0042095
+  client_married |   .0117141   .0529309     0.22   0.825    -.0922693    .1156975
+client_education |  -.0036931   .0041228    -0.90   0.371    -.0117924    .0044062
+         hh_size |  -.0113264   .0093055    -1.22   0.224    -.0296072    .0069544
+       hh_income |   3.14e-06   3.68e-06     0.85   0.393    -4.08e-06    .0000104
+          muslim |  -.0075629   .0366854    -0.21   0.837    -.0796318    .0645061
+    hindu_sc_kat |  -.0274764   .0526227    -0.52   0.602    -.1308542    .0759015
+         treated |   .0426031   .0346907     1.23   0.220    -.0255471    .1107532
+           _cons |   .1993902   .1142909     1.74   0.082    -.0251353    .4239158
+----------------------------------------------------------------------------------
+
+. 
+. esttab using "results/q2.tex", replace ///tell stata where to save the file
+>            mtitles("LPM") ///rename the columns: one regression = one col
+>            title(Problem 2\label{q2}) ///table title and LaTeX label
+>            b(4) se(a2) /// 4 decimal places for coeffs(b) & minimum of 2 sig figs in se. also, 
+> by typing se at all, i am telling it that the secondary thing to report is standard errors inst
+> ead of t statistics. the main thing it's reporting is b (the estimate coefficients)
+>             label booktabs  //formats it a little better
+(output written to results/q2.tex)
+
+. 
+. //note: i am not clearing eststo yet, because in the future problems, i want to be able to have
+>  tables that compare my results. 
+.            
+. *****************
+. *       problem 3   *
+. *****************
+. /*
+>         Repeat the estimation in Problem 2 with the robust option.
+> */
+. 
+. eststo lpmrobust: reg $vars , robust 
+
+Linear regression                               Number of obs     =        532
+                                                F(8, 523)         =       0.56
+                                                Prob > F          =     0.8074
+                                                R-squared         =     0.0079
+                                                Root MSE          =     .37494
+
+----------------------------------------------------------------------------------
+                 |               Robust
+       taken_new |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |  -.0000283   .0022749    -0.01   0.990    -.0044974    .0044409
+  client_married |   .0117141   .0518841     0.23   0.821    -.0902127    .1136409
+client_education |  -.0036931   .0041013    -0.90   0.368    -.0117502    .0043641
+         hh_size |  -.0113264   .0092822    -1.22   0.223    -.0295613    .0069085
+       hh_income |   3.14e-06   3.71e-06     0.85   0.398    -4.15e-06    .0000104
+          muslim |  -.0075629   .0365483    -0.21   0.836    -.0793625    .0642367
+    hindu_sc_kat |  -.0274764   .0509678    -0.54   0.590    -.1276031    .0726504
+         treated |   .0426031   .0334686     1.27   0.204    -.0231463    .1083524
+           _cons |   .1993902   .1168783     1.71   0.089    -.0302184    .4289989
+----------------------------------------------------------------------------------
+
+. //check what is in eststo by typing eststo dir . this will show that now there is 2 estimates s
+> tored in there, so whhen i use esttab it will have 2 columns
+. 
+. esttab using "results/q3.tex", replace ///
+>            mtitles("LPM" "LPM, robust SE") ///added column name
+>            title(Problems 2 \& 3\label{q3}) ///
+>            b(4) se(a2) /// 4 decimal places for coeffs & min 2 sig figs in se
+>            nostar label booktabs  //formats it a little better
+(output written to results/q3.tex)
+
+. 
+. 
+. 
+. *****************
+. *       problem 4   *
+. *****************
+. /*
+>         Generate predicted probabilities of loan take-up using the estimated 
+>         coefficients from Problem 2. Do any of these probabilities lie 
+>         outside [0, 1]? If so, do the observations corresponding to 
+>         these values show any particular patterns in the values of the 
+>         variables?
+> */
+. 
+. * repeat the regression from problem 2
+. reg $vars 
+
+      Source |       SS           df       MS      Number of obs   =       532
+-------------+----------------------------------   F(8, 523)       =      0.52
+       Model |  .586701556         8  .073337695   Prob > F        =    0.8405
+    Residual |  73.5242007       523  .140581646   R-squared       =    0.0079
+-------------+----------------------------------   Adj R-squared   =   -0.0073
+       Total |  74.1109023       531  .139568554   Root MSE        =    .37494
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |  -.0000283   .0021572    -0.01   0.990     -.004266    .0042095
+  client_married |   .0117141   .0529309     0.22   0.825    -.0922693    .1156975
+client_education |  -.0036931   .0041228    -0.90   0.371    -.0117924    .0044062
+         hh_size |  -.0113264   .0093055    -1.22   0.224    -.0296072    .0069544
+       hh_income |   3.14e-06   3.68e-06     0.85   0.393    -4.08e-06    .0000104
+          muslim |  -.0075629   .0366854    -0.21   0.837    -.0796318    .0645061
+    hindu_sc_kat |  -.0274764   .0526227    -0.52   0.602    -.1308542    .0759015
+         treated |   .0426031   .0346907     1.23   0.220    -.0255471    .1107532
+           _cons |   .1993902   .1142909     1.74   0.082    -.0251353    .4239158
+----------------------------------------------------------------------------------
+
+. 
+. * predict probabilities based on most recent regression
+. predict ptaken_new, xb
+
+. 
+. * check if any of them are outside [0,1]
+. sum ptaken_new
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+  ptaken_new |        532    .1672932      .03324   .0576639   .2821037
+
+. 
+. 
+. *****************
+. *       problem 5   *
+. *****************
+. /*
+>         Estimate the model by weighted least squares using Stata’s vwls 
+>         (variance weighted least squares) command. How much do the 
+>         coefficients differ from those obtained without weighting?
+>         How much do the standard errors differ from those produced by the 
+>         robust option?
+> */
+. 
+. * estimate the variance of the dependent variable taken_new
+. egen s = sd(taken_new) 
+
+. 
+. * variance-weighted least squares, using s
+. eststo wls: vwls $vars , sd(s)
+
+Variance-weighted least-squares regression      Number of obs     =        532
+Goodness-of-fit chi2(523)  =  526.80            Model chi2(8)     =       4.20
+Prob > chi2                =  0.4452            Prob > chi2       =     0.8383
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |  -.0000283   .0021494    -0.01   0.990     -.004241    .0041844
+  client_married |   .0117141   .0527399     0.22   0.824    -.0916541    .1150824
+client_education |  -.0036931   .0041079    -0.90   0.369    -.0117445    .0043583
+         hh_size |  -.0113264   .0092719    -1.22   0.222     -.029499    .0068462
+       hh_income |   3.14e-06   3.66e-06     0.86   0.391    -4.04e-06    .0000103
+          muslim |  -.0075629    .036553    -0.21   0.836    -.0792055    .0640797
+    hindu_sc_kat |  -.0274764   .0524328    -0.52   0.600    -.1302427      .07529
+         treated |   .0426031   .0345655     1.23   0.218     -.025144    .1103501
+           _cons |   .1993902   .1138783     1.75   0.080    -.0238071    .4225876
+----------------------------------------------------------------------------------
+
+. 
+. esttab using "results/q5.tex", replace ///
+>            mtitles("LPM" "LPM, robust SE" "vWLS") ///
+>            title(Problems 2, 3, \& 5\label{q5}) ///
+>            b(4) se(a2) /// 4 decimal places for coeffs & min 2 sig figs in se
+>            nostar label booktabs  //formats it a little better
+(output written to results/q5.tex)
+
+. 
+. 
+. *****************
+. *       problem 6   *
+. *****************
+. /*
+>         Estimate probit and logit models of loan take-up using the same 
+>         independent variables as in Problem 2. Are the probit and logit 
+>         coefficient estimates similar to one another and to the LPM 
+>         estimates?
+> */
+. 
+. eststo pro: probit $vars
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -238.07858  
+Iteration 2:   log likelihood = -238.07469  
+Iteration 3:   log likelihood = -238.07469  
+
+Probit regression                               Number of obs     =        532
+                                                LR chi2(8)        =       4.32
+                                                Prob > chi2       =     0.8272
+Log likelihood = -238.07469                     Pseudo R2         =     0.0090
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |   .0001538   .0085639     0.02   0.986    -.0166311    .0169387
+  client_married |   .0495006     .21405     0.23   0.817    -.3700297     .469031
+client_education |  -.0146394     .01661    -0.88   0.378    -.0471945    .0179157
+         hh_size |   -.047596    .037897    -1.26   0.209    -.1218727    .0266807
+       hh_income |   .0000133   .0000144     0.92   0.356    -.0000149    .0000415
+          muslim |  -.0325982   .1467714    -0.22   0.824    -.3202648    .2550683
+    hindu_sc_kat |  -.1099977   .2152225    -0.51   0.609     -.531826    .3118307
+         treated |   .1751011   .1418766     1.23   0.217    -.1029719    .4531741
+           _cons |  -.8526965   .4591759    -1.86   0.063    -1.752665    .0472717
+----------------------------------------------------------------------------------
+
+. 
+. eststo log: logit $vars
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -238.09541  
+Iteration 2:   log likelihood = -238.07838  
+Iteration 3:   log likelihood = -238.07838  
+
+Logistic regression                             Number of obs     =        532
+                                                LR chi2(8)        =       4.31
+                                                Prob > chi2       =     0.8280
+Log likelihood = -238.07838                     Pseudo R2         =     0.0090
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |   -.000382   .0156578    -0.02   0.981    -.0310707    .0303066
+  client_married |   .0930805   .3876506     0.24   0.810    -.6667008    .8528617
+client_education |  -.0275642   .0299653    -0.92   0.358    -.0862951    .0311666
+         hh_size |  -.0854032   .0693938    -1.23   0.218    -.2214126    .0506061
+       hh_income |   .0000223   .0000253     0.88   0.377    -.0000272    .0000718
+          muslim |  -.0532995   .2633343    -0.20   0.840    -.5694252    .4628263
+    hindu_sc_kat |  -.2078404     .39463    -0.53   0.598     -.981301    .5656203
+         treated |   .3186872   .2585782     1.23   0.218    -.1881167    .8254911
+           _cons |  -1.374046   .8354666    -1.64   0.100     -3.01153    .2634387
+----------------------------------------------------------------------------------
+
+. 
+. eststo drop wls 
+(wls dropped)
+
+. esttab using "results/q6.tex", replace ///
+>            mtitles("LPM" "LPM, robust SE" "Probit" "Logit") ///
+>            title(Problem 6\label{q6}) ///
+>            b(4) se(a2) /// 4 decimal places for coeffs & min 2 sig figs in se
+>            nostar label booktabs  //formats it a little better
+(output written to results/q6.tex)
+
+.            
+.            
+. *****************
+. *       problem 7   *
+. *****************
+. /*
+>         Calculate the mean partial derivatives (a.k.a. marginal effects or 
+>         average partial effects) of the conditional probabilities of loan 
+>         take-up with respect to client age for the LPM, logit and probit
+>         models.
+> */
+. 
+. foreach mod in reg logit probit  {      
+  2.         * run the model:
+.           `mod' $vars 
+  3.         * store the results; mfx is like margins 
+.           eststo dydx_`mod' : mfx
+  4. }
+
+      Source |       SS           df       MS      Number of obs   =       532
+-------------+----------------------------------   F(8, 523)       =      0.52
+       Model |  .586701556         8  .073337695   Prob > F        =    0.8405
+    Residual |  73.5242007       523  .140581646   R-squared       =    0.0079
+-------------+----------------------------------   Adj R-squared   =   -0.0073
+       Total |  74.1109023       531  .139568554   Root MSE        =    .37494
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |  -.0000283   .0021572    -0.01   0.990     -.004266    .0042095
+  client_married |   .0117141   .0529309     0.22   0.825    -.0922693    .1156975
+client_education |  -.0036931   .0041228    -0.90   0.371    -.0117924    .0044062
+         hh_size |  -.0113264   .0093055    -1.22   0.224    -.0296072    .0069544
+       hh_income |   3.14e-06   3.68e-06     0.85   0.393    -4.08e-06    .0000104
+          muslim |  -.0075629   .0366854    -0.21   0.837    -.0796318    .0645061
+    hindu_sc_kat |  -.0274764   .0526227    -0.52   0.602    -.1308542    .0759015
+         treated |   .0426031   .0346907     1.23   0.220    -.0255471    .1107532
+           _cons |   .1993902   .1142909     1.74   0.082    -.0251353    .4239158
+----------------------------------------------------------------------------------
+
+Marginal effects after regress
+      y  = Fitted values (predict)
+         =  .16729323
+------------------------------------------------------------------------------
+variable |      dy/dx    Std. Err.     z    P>|z|  [    95% C.I.   ]      X
+---------+--------------------------------------------------------------------
+client~e |  -.0000283      .00216   -0.01   0.990  -.004256    .0042   34.8947
+client~d*|   .0117141      .05293    0.22   0.825  -.092029  .115457   .892857
+client~n |  -.0036931      .00412   -0.90   0.370  -.011774  .004387   6.35338
+ hh_size |  -.0113264      .00931   -1.22   0.224  -.029565  .006912   5.30827
+hh_inc~e |   3.14e-06      .00000    0.85   0.393  -4.1e-06   .00001   6096.04
+  muslim*|  -.0075629      .03669   -0.21   0.837  -.079465  .064339   .300752
+hindu_~t*|  -.0274764      .05262   -0.52   0.602  -.130615  .075662   .116541
+ treated*|   .0426031      .03469    1.23   0.219  -.025389  .110596   .665414
+------------------------------------------------------------------------------
+(*) dy/dx is for discrete change of dummy variable from 0 to 1
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -238.09541  
+Iteration 2:   log likelihood = -238.07838  
+Iteration 3:   log likelihood = -238.07838  
+
+Logistic regression                             Number of obs     =        532
+                                                LR chi2(8)        =       4.31
+                                                Prob > chi2       =     0.8280
+Log likelihood = -238.07838                     Pseudo R2         =     0.0090
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |   -.000382   .0156578    -0.02   0.981    -.0310707    .0303066
+  client_married |   .0930805   .3876506     0.24   0.810    -.6667008    .8528617
+client_education |  -.0275642   .0299653    -0.92   0.358    -.0862951    .0311666
+         hh_size |  -.0854032   .0693938    -1.23   0.218    -.2214126    .0506061
+       hh_income |   .0000223   .0000253     0.88   0.377    -.0000272    .0000718
+          muslim |  -.0532995   .2633343    -0.20   0.840    -.5694252    .4628263
+    hindu_sc_kat |  -.2078404     .39463    -0.53   0.598     -.981301    .5656203
+         treated |   .3186872   .2585782     1.23   0.218    -.1881167    .8254911
+           _cons |  -1.374046   .8354666    -1.64   0.100     -3.01153    .2634387
+----------------------------------------------------------------------------------
+
+Marginal effects after logit
+      y  = Pr(taken_new) (predict)
+         =  .16451509
+------------------------------------------------------------------------------
+variable |      dy/dx    Std. Err.     z    P>|z|  [    95% C.I.   ]      X
+---------+--------------------------------------------------------------------
+client~e |  -.0000525      .00215   -0.02   0.981  -.004271  .004166   34.8947
+client~d*|   .0124824      .05069    0.25   0.805  -.086863  .111828   .892857
+client~n |  -.0037887      .00411   -0.92   0.356  -.011839  .004262   6.35338
+ hh_size |  -.0117387      .00949   -1.24   0.216  -.030339  .006862   5.30827
+hh_inc~e |   3.06e-06      .00000    0.88   0.376  -3.7e-06  9.9e-06   6096.04
+  muslim*|   -.007274      .03568   -0.20   0.838  -.077203  .062655   .300752
+hindu_~t*|  -.0270675      .04856   -0.56   0.577  -.122236  .068101   .116541
+ treated*|   .0423016      .03298    1.28   0.200  -.022337   .10694   .665414
+------------------------------------------------------------------------------
+(*) dy/dx is for discrete change of dummy variable from 0 to 1
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -238.07858  
+Iteration 2:   log likelihood = -238.07469  
+Iteration 3:   log likelihood = -238.07469  
+
+Probit regression                               Number of obs     =        532
+                                                LR chi2(8)        =       4.32
+                                                Prob > chi2       =     0.8272
+Log likelihood = -238.07469                     Pseudo R2         =     0.0090
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |   .0001538   .0085639     0.02   0.986    -.0166311    .0169387
+  client_married |   .0495006     .21405     0.23   0.817    -.3700297     .469031
+client_education |  -.0146394     .01661    -0.88   0.378    -.0471945    .0179157
+         hh_size |   -.047596    .037897    -1.26   0.209    -.1218727    .0266807
+       hh_income |   .0000133   .0000144     0.92   0.356    -.0000149    .0000415
+          muslim |  -.0325982   .1467714    -0.22   0.824    -.3202648    .2550683
+    hindu_sc_kat |  -.1099977   .2152225    -0.51   0.609     -.531826    .3118307
+         treated |   .1751011   .1418766     1.23   0.217    -.1029719    .4531741
+           _cons |  -.8526965   .4591759    -1.86   0.063    -1.752665    .0472717
+----------------------------------------------------------------------------------
+
+Marginal effects after probit
+      y  = Pr(taken_new) (predict)
+         =  .16503125
+------------------------------------------------------------------------------
+variable |      dy/dx    Std. Err.     z    P>|z|  [    95% C.I.   ]      X
+---------+--------------------------------------------------------------------
+client~e |   .0000382      .00213    0.02   0.986  -.004129  .004205   34.8947
+client~d*|   .0120563      .05112    0.24   0.814  -.088143  .112256   .892857
+client~n |  -.0036344      .00412   -0.88   0.378  -.011711  .004442   6.35338
+ hh_size |  -.0118163      .00939   -1.26   0.208  -.030219  .006587   5.30827
+hh_inc~e |   3.30e-06      .00000    0.92   0.355  -3.7e-06   .00001   6096.04
+  muslim*|  -.0080417      .03597   -0.22   0.823   -.07855  .062466   .300752
+hindu_~t*|  -.0261864      .04903   -0.53   0.593  -.122289  .069917   .116541
+ treated*|   .0422445      .03318    1.27   0.203   -.02279  .107279   .665414
+------------------------------------------------------------------------------
+(*) dy/dx is for discrete change of dummy variable from 0 to 1
+
+. 
+. * make a table:
+. esttab dydx_* using "results/q7a.tex", replace                                                 
+>  ///
+>            keep(client_age) margin  se                                                         
+>                  ///
+>            mtitles  nostar booktabs label
+(output written to results/q7a.tex)
+
+. 
+. 
+. *** doing extra for probit model (continuing problem 7) ***
+. 
+. * (a) Calculate analytic derivatives evaluated at the mean of the covariates.
+. eststo clear // clear the stored 
+
+. eststo dprob: dprobit $vars
+
+Iteration 0:   log likelihood = -240.23429
+Iteration 1:   log likelihood = -238.07858
+Iteration 2:   log likelihood = -238.07469
+Iteration 3:   log likelihood = -238.07469
+
+Probit regression, reporting marginal effects           Number of obs =    532
+                                                        LR chi2(8)    =   4.32
+                                                        Prob > chi2   = 0.8272
+Log likelihood = -238.07469                             Pseudo R2     = 0.0090
+
+------------------------------------------------------------------------------
+taken_~w |      dF/dx   Std. Err.      z    P>|z|     x-bar  [    95% C.I.   ]
+---------+--------------------------------------------------------------------
+client~e |   .0000382   .0021261     0.02   0.986   34.8947  -.004129  .004205
+client~d*|   .0120563   .0511232     0.23   0.817   .892857  -.088143  .112256
+client~n |  -.0036344   .0041208    -0.88   0.378   6.35338  -.011711  .004442
+ hh_size |  -.0118163   .0093894    -1.26   0.209   5.30827  -.030219  .006587
+hh_inc~e |   3.30e-06   3.57e-06     0.92   0.356   6096.04  -3.7e-06   .00001
+  muslim*|  -.0080417    .035974    -0.22   0.824   .300752   -.07855  .062466
+hindu_~t*|  -.0261864    .049033    -0.51   0.609   .116541  -.122289  .069917
+ treated*|   .0422445   .0331814     1.23   0.217   .665414   -.02279  .107279
+---------+--------------------------------------------------------------------
+  obs. P |   .1672932
+ pred. P |   .1650313  (at x-bar)
+------------------------------------------------------------------------------
+(*) dF/dx is for discrete change of dummy variable from 0 to 1
+    z and P>|z| correspond to the test of the underlying coefficient being 0
+
+. 
+. sca deriv1 = round(e(dfdx)[1,1], .0000001) // store in scalar for table
+
+. 
+. 
+. * (b) Calculate mean analytic derivatives by hand. That is, use the formula to calculate the pa
+> rtial derivative for each observation and then summarize these to get the mean.
+. probit $vars // redo probit model
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -238.07858  
+Iteration 2:   log likelihood = -238.07469  
+Iteration 3:   log likelihood = -238.07469  
+
+Probit regression                               Number of obs     =        532
+                                                LR chi2(8)        =       4.32
+                                                Prob > chi2       =     0.8272
+Log likelihood = -238.07469                     Pseudo R2         =     0.0090
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |   .0001538   .0085639     0.02   0.986    -.0166311    .0169387
+  client_married |   .0495006     .21405     0.23   0.817    -.3700297     .469031
+client_education |  -.0146394     .01661    -0.88   0.378    -.0471945    .0179157
+         hh_size |   -.047596    .037897    -1.26   0.209    -.1218727    .0266807
+       hh_income |   .0000133   .0000144     0.92   0.356    -.0000149    .0000415
+          muslim |  -.0325982   .1467714    -0.22   0.824    -.3202648    .2550683
+    hindu_sc_kat |  -.1099977   .2152225    -0.51   0.609     -.531826    .3118307
+         treated |   .1751011   .1418766     1.23   0.217    -.1029719    .4531741
+           _cons |  -.8526965   .4591759    -1.86   0.063    -1.752665    .0472717
+----------------------------------------------------------------------------------
+
+. sca b_client_age = _b[client_age] //store the coefficent from probit est
+
+. 
+. predict probit_yhat //, xb //, index // get the predicted x*beta 
+(option pr assumed; Pr(taken_new))
+
+.  
+. gen deriv2obs = normalden(probit_yhat)* b_client_age //follows formula
+
+. 
+. sum deriv2obs // get the mean over all variables 
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   deriv2obs |        532    .0000605    3.45e-07   .0000584   .0000612
+
+. 
+. sca deriv2 = round(_result(3), .0000001) // store in scalar for table
+
+. 
+. 
+. * (c) Calculate mean numerical derivatives by calculating predicted probabilities for each obse
+> rvation and then changing the client age value for each observation by a little bit (e.g. 0.001
+> ) and recalculating the predicted probabilities.
+. 
+. * small deviation in client age
+. sca dage = .0001 //even with .01 it was such a small change I got nothing...
+
+. 
+. replace client_age = client_age + dage
+(532 real changes made)
+
+. 
+. predict probit_yhat1 //, xb
+(option pr assumed; Pr(taken_new))
+
+. 
+. * use the formula for derivative:                       
+. gen deriv3obs = (normal(probit_yhat1) - normal(probit_yhat))/dage
+
+. sum deriv3obs 
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   deriv3obs |        532    .0000136    .0000242          0    .000059
+
+. sca deriv3 = round(_result(3), .0000001)
+
+. 
+. * put client age back 
+. replace client_age = client_age - dage
+(532 real changes made)
+
+. 
+. * (d) Calculate mean derivatives using the margins command.
+. probit $vars
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -238.07858  
+Iteration 2:   log likelihood = -238.07469  
+Iteration 3:   log likelihood = -238.07469  
+
+Probit regression                               Number of obs     =        532
+                                                LR chi2(8)        =       4.32
+                                                Prob > chi2       =     0.8272
+Log likelihood = -238.07469                     Pseudo R2         =     0.0090
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |   .0001538   .0085639     0.02   0.986    -.0166311    .0169387
+  client_married |   .0495006     .21405     0.23   0.817    -.3700297     .469031
+client_education |  -.0146394     .01661    -0.88   0.378    -.0471945    .0179157
+         hh_size |   -.047596    .037897    -1.26   0.209    -.1218727    .0266807
+       hh_income |   .0000133   .0000144     0.92   0.356    -.0000149    .0000415
+          muslim |  -.0325982   .1467714    -0.22   0.824    -.3202648    .2550683
+    hindu_sc_kat |  -.1099977   .2152225    -0.51   0.609     -.531826    .3118307
+         treated |   .1751011   .1418766     1.23   0.217    -.1029719    .4531741
+           _cons |  -.8526965   .4591759    -1.86   0.063    -1.752665    .0472717
+----------------------------------------------------------------------------------
+
+. 
+. margins, dydx(client_age)
+
+Average marginal effects                        Number of obs     =        532
+Model VCE    : OIM
+
+Expression   : Pr(taken_new), predict()
+dy/dx w.r.t. : client_age
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+  client_age |   .0000382   .0021255     0.02   0.986    -.0041277     .004204
+------------------------------------------------------------------------------
+
+. sca deriv4 = round(_result(3), .0000001)
+
+. 
+. 
+. 
+. *****************
+. *       problem 8   *
+. *****************
+. /*
+>         Re-estimate the LPM including a quartic in client age (i.e. including 
+>         linear, squared, cubed and fourth power terms), rather than just a 
+>         linear term. Calculate the average derivative numerically, as in part 
+>         (c), and compare it to that obtained from the probit model. Does the 
+>         LPM do better with greater flexibility?
+> */
+. 
+. gen client_age2 = client_age^2
+
+. gen client_age3 = client_age^3
+
+. gen client_age4 = client_age^4
+
+. 
+. global vars2 "taken_new client_age* client_married client_education hh_size hh_income muslim hi
+> ndu_sc_kat treated"
+
+. 
+. eststo clear
+
+. eststo lpm_quartic: reg $vars2 
+
+      Source |       SS           df       MS      Number of obs   =       532
+-------------+----------------------------------   F(11, 520)      =      1.52
+       Model |  2.30781755        11  .209801595   Prob > F        =    0.1205
+    Residual |  71.8030847       520  .138082855   R-squared       =    0.0311
+-------------+----------------------------------   Adj R-squared   =    0.0106
+       Total |  74.1109023       531  .139568554   Root MSE        =     .3716
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |  -.4933651   .1790594    -2.76   0.006    -.8451339   -.1415964
+     client_age2 |   .0198727   .0068756     2.89   0.004     .0063653    .0333801
+     client_age3 |  -.0003363   .0001114    -3.02   0.003    -.0005552   -.0001174
+     client_age4 |   2.01e-06   6.40e-07     3.14   0.002     7.54e-07    3.27e-06
+  client_married |   .0151682   .0553267     0.27   0.784    -.0935232    .1238596
+client_education |  -.0031541   .0041053    -0.77   0.443    -.0112191    .0049109
+         hh_size |  -.0088907   .0093101    -0.95   0.340    -.0271807    .0093993
+       hh_income |   3.65e-06   3.67e-06     0.99   0.321    -3.56e-06    .0000109
+          muslim |  -.0128246     .03645    -0.35   0.725     -.084432    .0587828
+    hindu_sc_kat |  -.0333433   .0522834    -0.64   0.524    -.1360559    .0693693
+         treated |   .0464548   .0344114     1.35   0.178    -.0211476    .1140572
+           _cons |   4.517748   1.655648     2.73   0.007     1.265168    7.770328
+----------------------------------------------------------------------------------
+
+. 
+. * get the predicted values before making small change
+. predict lpm_xb0 
+(option xb assumed; fitted values)
+
+. 
+. * change client age by a small amount 
+. 
+. replace client_age = client_age + dage
+(532 real changes made)
+
+. replace client_age2 = client_age^2
+(532 real changes made)
+
+. replace client_age3 = client_age^3
+(532 real changes made)
+
+. replace client_age4 = client_age^4
+(532 real changes made)
+
+. 
+. * predict new xb values
+. predict lpm_xb1
+(option xb assumed; fitted values)
+
+. 
+. * calculate derivative at all observations 
+. gen lpm_deriv = (lpm_xb1 - lpm_xb0) / dage
+
+. qui sum lpm_deriv
+
+. sca lpm_deriv = _result(3)
+
+. di lpm_deriv 
+.01356006
+
+. di deriv3
+.00005873
+
+. 
+. * replace client age back to normal
+. replace client_age = client_age - dage
+(532 real changes made)
+
+. 
+. 
+. 
+. *****************
+. *       problem 9   *
+. *****************
+. /*
+>         For the probit model estimated in Problem 6, calculate the value of 
+>         the LRI “by hand” by obtaining the likelihood values for the model in 
+>         Problem 6 and a model with only an intercept and plugging them into 
+>         the LRI formula. Interpret the value you obtain.
+> */
+. 
+. * repeat probit regression
+. eststo clear
+
+. eststo probitfull: probit $vars
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -238.07858  
+Iteration 2:   log likelihood = -238.07469  
+Iteration 3:   log likelihood = -238.07469  
+
+Probit regression                               Number of obs     =        532
+                                                LR chi2(8)        =       4.32
+                                                Prob > chi2       =     0.8272
+Log likelihood = -238.07469                     Pseudo R2         =     0.0090
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |   .0001538   .0085639     0.02   0.986    -.0166311    .0169387
+  client_married |   .0495006     .21405     0.23   0.817    -.3700297     .469031
+client_education |  -.0146394     .01661    -0.88   0.378    -.0471945    .0179157
+         hh_size |   -.047596    .037897    -1.26   0.209    -.1218727    .0266807
+       hh_income |   .0000133   .0000144     0.92   0.356    -.0000149    .0000415
+          muslim |  -.0325982   .1467714    -0.22   0.824    -.3202648    .2550683
+    hindu_sc_kat |  -.1099977   .2152225    -0.51   0.609     -.531826    .3118307
+         treated |   .1751011   .1418766     1.23   0.217    -.1029719    .4531741
+           _cons |  -.8526965   .4591759    -1.86   0.063    -1.752665    .0472717
+----------------------------------------------------------------------------------
+
+.         * ereturn list shows that ln L and ln L0 are stored in ll and ll_0
+. 
+. * store scalars
+. sca ll = e(ll)
+
+. sca ll0 = e(ll_0)
+
+. 
+. * plug into LRI formula
+. sca lri = 1 - (ll / ll0)
+
+. di lri 
+.00898958
+
+. 
+. 
+. *****************
+. *       problem 10   *
+. *****************
+. /*
+>         Calculate the correct prediction rate for the probit model estimated 
+>         in Problem 6 using both 0.5 and the sample fraction taking up a loan 
+>         as cutoff values. In each case, take the equally weighted average of 
+>         the correct prediction rates for those who take up a loan and those 
+>         who do not. Indicate and discuss how the model performs in each case. 
+>         Explain any differences between the two and indicate which measure of 
+>         goodness of fit you prefer and why. [Note: the equal weights refer to 
+>         the prediction rates, not the individual observations.]
+> */
+. 
+. * get the sample fraction of taking up a loan (which is the mean)
+. sum taken_new
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   taken_new |        532    .1672932    .3735888          0          1
+
+. local loanfrac = _result(3)
+
+. 
+. * predicted probabilities are already done, in probit_yhat
+. 
+. * create a variable for if predicted probabilities are > cutoff
+. forval i = 1/2{
+  2.         * define the cutoff rate
+.         if `i'== 1  local cutoff = 0.5
+  3.         if `i'== 2  local cutoff = `loanfrac'
+  4.         
+.         * create dummy = 1 if phat > cutoff value
+.         gen cutoff`i' = 0
+  5.         replace cutoff`i' =1 if probit_yhat> `cutoff'
+  6.         
+.         * pull out the mean, i.e. the correct prediction rate
+.         sum cutoff`i'
+  7.         sca cpr`i' = _result(3)
+  8. }
+(0 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     cutoff1 |        532           0           0          0          0
+(273 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     cutoff2 |        532    .5131579    .5002973          0          1
+
+. 
+. di cpr1
+0
+
+. di cpr2
+.51315789
+
+. 
+. *****************
+. *       problem 11   *
+. *****************
+. /*
+>         Examine the difference between in-sample and out-of-sample predictive 
+>         success by estimating the model using the usual covariates but only 
+>         those observations with imidlineid < 1400. Compare the predictive
+>         performance of the model using the same criteria as in the preceding
+>         question for observations in and out of the estimation sample. What
+>         differences, if any, do you find? Does what you find accord with your
+>         expectations? Explain.
+> */
+. 
+. 
+. * repeat the probit with imidlineid < 1400 easiest way is to drop obs and reload data later, so
+>  i can copy and paste code from 10. 
+. * drop if imidlineid < 1400
+. eststo probitsubsample: probit $vars if imidlineid < 1400
+
+Iteration 0:   log likelihood = -117.67911  
+Iteration 1:   log likelihood = -115.82624  
+Iteration 2:   log likelihood = -115.80635  
+Iteration 3:   log likelihood = -115.80635  
+
+Probit regression                               Number of obs     =        266
+                                                LR chi2(8)        =       3.75
+                                                Prob > chi2       =     0.8793
+Log likelihood = -115.80635                     Pseudo R2         =     0.0159
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |   .0095479   .0132631     0.72   0.472    -.0164472    .0355431
+  client_married |   .1217882    .317054     0.38   0.701    -.4996262    .7432027
+client_education |   .0020014   .0246685     0.08   0.935    -.0463478    .0503507
+         hh_size |   .0450808   .0526267     0.86   0.392    -.0580656    .1482272
+       hh_income |   4.91e-06     .00002     0.25   0.806    -.0000342    .0000441
+          muslim |   .0064283   .2123982     0.03   0.976    -.4098646    .4227212
+    hindu_sc_kat |  -.5059869    .387024    -1.31   0.191     -1.26454    .2525661
+         treated |   .0434882   .2025915     0.21   0.830     -.353584    .4405603
+           _cons |  -1.708002   .7275063    -2.35   0.019    -3.133888    -.282116
+----------------------------------------------------------------------------------
+
+. 
+. * get the sample fraction of taking up a loan (which is the mean)
+. sum taken_new if imidlineid < 1400
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   taken_new |        266    .1616541    .3688272          0          1
+
+. local loanfrac = _result(3)
+
+. 
+. * predicted probabilities
+. predict probit_yhat_ss if imidlineid < 1400 
+(option pr assumed; Pr(taken_new))
+(266 missing values generated)
+
+. 
+. * create a variable for if predicted probabilities are > cutoff
+. forval i = 1/2{
+  2.         * define the cutoff rate
+.         if `i'== 1  local cutoff = 0.5
+  3.         if `i'== 2  local cutoff = `loanfrac'
+  4.         
+.         * create dummy = 1 if phat > cutoff value
+.         gen cutoff_ss`i' = 0 
+  5.         replace cutoff_ss`i' =1 if probit_yhat_ss> `cutoff'
+  6.         
+.         * pull out the mean, i.e. the correct prediction rate
+.         sum cutoff_ss`i' if imidlineid < 1400
+  7.         sca cpr`i'_ss = _result(3)
+  8.         
+. }
+(266 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+  cutoff_ss1 |        266           0           0          0          0
+(396 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+  cutoff_ss2 |        266    .4887218    .5008151          0          1
+
+. 
+. di cpr1_ss
+0
+
+. di cpr2_ss
+.4887218
+
+. 
+. 
+. ******************
+. *       problem 12   *
+. ******************
+. /*
+>         Estimate a probit model of loan take-up including the usual 
+>         covariates plus an interaction term between married and Muslim.
+> */
+. 
+. global vars3 "taken_new client_age i.client_married client_education hh_size hh_income i.muslim
+>  hindu_sc_kat treated client_married#muslim"
+
+. global vars4 "taken_new client_age i.client_married client_education hh_size hh_income i.muslim
+>  hindu_sc_kat treated"
+
+. 
+. eststo probit_int: probit $vars3
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -237.89689  
+Iteration 2:   log likelihood = -237.89262  
+Iteration 3:   log likelihood = -237.89262  
+
+Probit regression                               Number of obs     =        532
+                                                LR chi2(9)        =       4.68
+                                                Prob > chi2       =     0.8610
+Log likelihood = -237.89262                     Pseudo R2         =     0.0097
+
+---------------------------------------------------------------------------------------
+            taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+----------------------+----------------------------------------------------------------
+           client_age |   .0009312   .0086796     0.11   0.915    -.0160805    .0179429
+     1.client_married |   .1556674   .2806756     0.55   0.579    -.3944468    .7057815
+     client_education |  -.0153534   .0166616    -0.92   0.357    -.0480094    .0173027
+              hh_size |  -.0502379   .0381311    -1.32   0.188    -.1249735    .0244977
+            hh_income |   .0000126   .0000145     0.87   0.383    -.0000157     .000041
+             1.muslim |   .2059269    .420573     0.49   0.624    -.6183811    1.030235
+         hindu_sc_kat |  -.1142815   .2152731    -0.53   0.596     -.536209     .307646
+              treated |   .1819567   .1423657     1.28   0.201    -.0970751    .4609884
+                      |
+client_married#muslim |
+                 1 1  |  -.2709185   .4481227    -0.60   0.545    -1.149223    .6073858
+                      |
+                _cons |  -.9589165   .4938953    -1.94   0.052    -1.926934    .0091005
+---------------------------------------------------------------------------------------
+
+. eststo probit_noint: probit $vars4 //have to redo this so that the table matches up nicely. 
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -238.07858  
+Iteration 2:   log likelihood = -238.07469  
+Iteration 3:   log likelihood = -238.07469  
+
+Probit regression                               Number of obs     =        532
+                                                LR chi2(8)        =       4.32
+                                                Prob > chi2       =     0.8272
+Log likelihood = -238.07469                     Pseudo R2         =     0.0090
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |   .0001538   .0085639     0.02   0.986    -.0166311    .0169387
+1.client_married |   .0495006     .21405     0.23   0.817    -.3700297     .469031
+client_education |  -.0146394     .01661    -0.88   0.378    -.0471945    .0179157
+         hh_size |   -.047596    .037897    -1.26   0.209    -.1218727    .0266807
+       hh_income |   .0000133   .0000144     0.92   0.356    -.0000149    .0000415
+        1.muslim |  -.0325982   .1467714    -0.22   0.824    -.3202648    .2550683
+    hindu_sc_kat |  -.1099977   .2152225    -0.51   0.609     -.531826    .3118307
+         treated |   .1751011   .1418766     1.23   0.217    -.1029719    .4531741
+           _cons |  -.8526965   .4591759    -1.86   0.063    -1.752665    .0472717
+----------------------------------------------------------------------------------
+
+. 
+. esttab probit_noint probit_int using "results/q12.tex", replace ///
+>            mtitles("no interaction" "interaction") ///added column name
+>            title(Problem 12: probit models \label{q12}) ///
+>            b(4) se(4) varwidth(5) /// 
+>             booktabs  ///formats it a little better
+>            nobaselevels interaction(" $\times$ ") ///
+>            label 
+(output written to results/q12.tex)
+
+. 
+. ******************
+. *       problem 13   *
+. ******************
+. /*
+>         Compare mean finite differences of the interaction term calculated 
+>         without the additional terms highlighted in the Ai and Norton (2003) 
+>         paper in the probit model estimated in Question 12 with mean interaction 
+>         effects that included these terms calculated “by hand” in Stata Are they 
+>         very different? Be sure to compare finite differences rather than 
+>         derivatives.
+> */      
+. 
+. probit $vars3
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -237.89689  
+Iteration 2:   log likelihood = -237.89262  
+Iteration 3:   log likelihood = -237.89262  
+
+Probit regression                               Number of obs     =        532
+                                                LR chi2(9)        =       4.68
+                                                Prob > chi2       =     0.8610
+Log likelihood = -237.89262                     Pseudo R2         =     0.0097
+
+---------------------------------------------------------------------------------------
+            taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+----------------------+----------------------------------------------------------------
+           client_age |   .0009312   .0086796     0.11   0.915    -.0160805    .0179429
+     1.client_married |   .1556674   .2806756     0.55   0.579    -.3944468    .7057815
+     client_education |  -.0153534   .0166616    -0.92   0.357    -.0480094    .0173027
+              hh_size |  -.0502379   .0381311    -1.32   0.188    -.1249735    .0244977
+            hh_income |   .0000126   .0000145     0.87   0.383    -.0000157     .000041
+             1.muslim |   .2059269    .420573     0.49   0.624    -.6183811    1.030235
+         hindu_sc_kat |  -.1142815   .2152731    -0.53   0.596     -.536209     .307646
+              treated |   .1819567   .1423657     1.28   0.201    -.0970751    .4609884
+                      |
+client_married#muslim |
+                 1 1  |  -.2709185   .4481227    -0.60   0.545    -1.149223    .6073858
+                      |
+                _cons |  -.9589165   .4938953    -1.94   0.052    -1.926934    .0091005
+---------------------------------------------------------------------------------------
+
+. margins client_married, dydx(muslim)
+
+Average marginal effects                        Number of obs     =        532
+Model VCE    : OIM
+
+Expression   : Pr(taken_new), predict()
+dy/dx w.r.t. : 1.muslim
+
+--------------------------------------------------------------------------------
+               |            Delta-method
+               |      dy/dx   Std. Err.      z    P>|z|     [95% Conf. Interval]
+---------------+----------------------------------------------------------------
+0.muslim       |  (base outcome)
+---------------+----------------------------------------------------------------
+1.muslim       |
+client_married |
+            0  |   .0496929   .1035644     0.48   0.631    -.1532896    .2526754
+            1  |  -.0159952   .0380577    -0.42   0.674     -.090587    .0585965
+--------------------------------------------------------------------------------
+Note: dy/dx for factor levels is the discrete change from the base level.
+
+. sca inteffects = r(b)[1,4]
+
+. sca inteffects_se = r(table)[2,4]
+
+. 
+. * instead, taking finite differences:  
+. gen marriedmuslim = client_married*muslim
+
+. probit taken_new client_married muslim client_age client_education hh_size hh_income hindu_sc_k
+> at treated marriedmuslim
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -237.89689  
+Iteration 2:   log likelihood = -237.89262  
+Iteration 3:   log likelihood = -237.89262  
+
+Probit regression                               Number of obs     =        532
+                                                LR chi2(9)        =       4.68
+                                                Prob > chi2       =     0.8610
+Log likelihood = -237.89262                     Pseudo R2         =     0.0097
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+  client_married |   .1556674   .2806756     0.55   0.579    -.3944468    .7057815
+          muslim |   .2059269    .420573     0.49   0.624    -.6183811    1.030235
+      client_age |   .0009312   .0086796     0.11   0.915    -.0160805    .0179429
+client_education |  -.0153534   .0166616    -0.92   0.357    -.0480094    .0173027
+         hh_size |  -.0502379   .0381311    -1.32   0.188    -.1249735    .0244977
+       hh_income |   .0000126   .0000145     0.87   0.383    -.0000157     .000041
+    hindu_sc_kat |  -.1142815   .2152731    -0.53   0.596     -.536209     .307646
+         treated |   .1819567   .1423657     1.28   0.201    -.0970751    .4609884
+   marriedmuslim |  -.2709185   .4481227    -0.60   0.545    -1.149223    .6073858
+           _cons |  -.9589165   .4938953    -1.94   0.052    -1.926934    .0091005
+----------------------------------------------------------------------------------
+
+. 
+. forval i =1/10 {        
+  2.         sca beta`i' = e(b)[1,`i']
+  3.         
+. }
+
+. 
+. gen xb = beta3*client_age + beta4*client_education + beta5*hh_size + beta6*hh_income + beta7*hi
+> ndu_sc_kat + beta8*treated + beta10
+
+. 
+. gen finitediff = (normal(beta1 + beta2 +beta9 +xb) - normal(beta2 + xb)) - (normal(beta1 + xb) 
+> - normal(xb))
+
+. 
+. sum finitediff 
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+  finitediff |        532   -.0656881    .0090154  -.0940147  -.0364692
+
+. sca finitediff = _result(3)
+
+. 
+. di inteffects
+-.01599524
+
+. di finitediff
+-.0643572
+
+. 
+. 
+. ******************
+. *       problem 14   *
+. ******************
+. /*
+>         What is the standard deviation of the estimated interaction effects 
+>         obtained “by hand” in Problem 13 across sample observations? Why is this 
+>         variance so small in this context?
+> */      
+. 
+. * computed in problem 13. 
+. 
+. ******************
+. *       problem 15   *
+. ******************
+. /*
+>         Estimate a regression of the squared residuals from a linear probability 
+>         model of loan take-up with the usual covariates on the usual covariates. 
+>         What evidence, if any, do you find of heteroskedacity?
+> */      
+. eststo clear
+
+. eststo lpm: qui reg $vars, robust
+
+. predict resid, r
+
+. gen resid2 = resid^2
+
+. 
+. eststo lpm_resid: reg resid2 client_age client_married client_education hh_size hh_income musli
+> m hindu_sc_kat treated, robust
+
+Linear regression                               Number of obs     =        532
+                                                F(8, 523)         =       0.62
+                                                Prob > F          =     0.7593
+                                                R-squared         =     0.0085
+                                                Root MSE          =      .2466
+
+----------------------------------------------------------------------------------
+                 |               Robust
+          resid2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |   .0001681   .0015304     0.11   0.913    -.0028383    .0031746
+  client_married |   .0077442   .0350285     0.22   0.825    -.0610695     .076558
+client_education |   -.002132   .0026561    -0.80   0.423      -.00735     .003086
+         hh_size |   -.007861   .0063168    -1.24   0.214    -.0202704    .0045483
+       hh_income |   2.51e-06   2.35e-06     1.07   0.285    -2.10e-06    7.13e-06
+          muslim |  -.0063261   .0239593    -0.26   0.792    -.0533943    .0407421
+    hindu_sc_kat |  -.0167612   .0356491    -0.47   0.638    -.0867942    .0532717
+         treated |   .0281959   .0229572     1.23   0.220    -.0169038    .0732955
+           _cons |   .1504638   .0770911     1.95   0.051    -.0009825    .3019102
+----------------------------------------------------------------------------------
+
+. 
+. #delimit ;
+delimiter now ;
+. esttab using "results/q15.tex", replace
+>            mtitles("LPM" "Squared residuals")
+>            booktabs label  nostar
+>            b(4) se(4)
+>            title(Problem 15\label{q15});
+(output written to results/q15.tex)
+
+. #delimit cr
+delimiter now cr
+. 
+. 
+. ******************
+. *       problem 16   *
+. ******************
+. /*
+>         Using the hetprob command, estimate a probit model of loan take-up on 
+>         the usual covariates, allowing for heteroskedasticity that depends on 
+>         client age and education. What evidence, if any, do you find of 
+>         heteroskedasticity?
+> */
+. eststo prob: probit $vars
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -238.07858  
+Iteration 2:   log likelihood = -238.07469  
+Iteration 3:   log likelihood = -238.07469  
+
+Probit regression                               Number of obs     =        532
+                                                LR chi2(8)        =       4.32
+                                                Prob > chi2       =     0.8272
+Log likelihood = -238.07469                     Pseudo R2         =     0.0090
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+      client_age |   .0001538   .0085639     0.02   0.986    -.0166311    .0169387
+  client_married |   .0495006     .21405     0.23   0.817    -.3700297     .469031
+client_education |  -.0146394     .01661    -0.88   0.378    -.0471945    .0179157
+         hh_size |   -.047596    .037897    -1.26   0.209    -.1218727    .0266807
+       hh_income |   .0000133   .0000144     0.92   0.356    -.0000149    .0000415
+          muslim |  -.0325982   .1467714    -0.22   0.824    -.3202648    .2550683
+    hindu_sc_kat |  -.1099977   .2152225    -0.51   0.609     -.531826    .3118307
+         treated |   .1751011   .1418766     1.23   0.217    -.1029719    .4531741
+           _cons |  -.8526965   .4591759    -1.86   0.063    -1.752665    .0472717
+----------------------------------------------------------------------------------
+
+. eststo hetprob: hetprobit $vars , het(client_age client_education)
+
+Fitting probit model:
+
+Iteration 0:   log likelihood = -240.23429  
+Iteration 1:   log likelihood = -238.07858  
+Iteration 2:   log likelihood = -238.07469  
+Iteration 3:   log likelihood = -238.07469  
+
+Fitting full model:
+
+Iteration 0:   log likelihood = -238.07469  (not concave)
+Iteration 1:   log likelihood = -237.99107  
+Iteration 2:   log likelihood = -237.64163  
+Iteration 3:   log likelihood = -237.57256  
+Iteration 4:   log likelihood = -237.11403  
+Iteration 5:   log likelihood =  -236.9148  
+Iteration 6:   log likelihood = -236.69574  
+Iteration 7:   log likelihood = -236.60898  
+Iteration 8:   log likelihood = -236.59195  
+Iteration 9:   log likelihood = -236.59073  
+Iteration 10:  log likelihood =  -236.5907  
+Iteration 11:  log likelihood =  -236.5907  
+
+Heteroskedastic probit model                    Number of obs     =        532
+                                                Zero outcomes     =        443
+                                                Nonzero outcomes  =         89
+
+                                                Wald chi2(8)      =       2.19
+Log likelihood = -236.5907                      Prob > chi2       =     0.9745
+
+----------------------------------------------------------------------------------
+       taken_new |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-----------------+----------------------------------------------------------------
+taken_new        |
+      client_age |  -.1123273   .1374995    -0.82   0.414    -.3818214    .1571668
+  client_married |   .1288146   .8458704     0.15   0.879    -1.529061     1.78669
+client_education |  -.3106294   .2555354    -1.22   0.224    -.8114697    .1902108
+         hh_size |  -.2261131   .1970247    -1.15   0.251    -.6122744    .1600482
+       hh_income |   .0000693   .0000723     0.96   0.338    -.0000723    .0002109
+          muslim |  -.1792461   .5843143    -0.31   0.759    -1.324481    .9659888
+    hindu_sc_kat |  -.3442778   .9618559    -0.36   0.720    -2.229481    1.540925
+         treated |   .9149664   .7866622     1.16   0.245    -.6268631    2.456796
+           _cons |    1.71513    3.57286     0.48   0.631    -5.287547    8.717807
+-----------------+----------------------------------------------------------------
+lnsigma          |
+      client_age |   .0285154   .0196403     1.45   0.147    -.0099788    .0670096
+client_education |   .0694184    .047379     1.47   0.143    -.0234426    .1622795
+----------------------------------------------------------------------------------
+LR test of lnsigma=0: chi2(2) = 2.97                      Prob > chi2 = 0.2267
+
+. 
+. #delimit ;
+delimiter now ;
+. esttab using "results/q16.tex", replace
+>            mtitles("LPM" "Squared residuals" "Probit" "\texttt{hetprobit}")
+>            booktabs label  
+>            b(4) se(4) r2
+>            title(Problems 15 \& 16\label{q16});
+(output written to results/q16.tex)
+
+. #delimit cr
+delimiter now cr
+.            
+. *************
+. * write the tables that used texdoc instead of esttab
+. texdoc do metrics_ps1_tables
+
+. /*
+>         applied metrics spring 2022
+>         problem set 1 tables
+>         emily case 
+>         
+>         note: need to install texdoc for this to work
+> */
+. 
+. quietly{
+
+. 
+end of do-file
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/emilycase/Desktop/metrics sp22/ps1/merics_ps1_log.log
+  log type:  text
+ closed on:  16 Feb 2022, 12:50:02
+-------------------------------------------------------------------------------------------------

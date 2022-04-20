@@ -1,0 +1,885 @@
+--------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/emilycase/Desktop/metrics sp22/ps2/merics_ps2_log.log
+  log type:  text
+ opened on:   8 Mar 2022, 23:25:21
+
+. 
+. clear all
+
+. cd "/Users/emilycase/Desktop/metrics sp22/ps2"
+/Users/emilycase/Desktop/metrics sp22/ps2
+
+. 
+. 
+. use "NSW_Data"
+
+. 
+. // drop observations from the PSID comparison group.
+.         drop if sample == 3
+(2,490 observations deleted)
+
+. 
+. // gen age^2
+.         gen age2 = age*age 
+
+. 
+. // store independent variables
+.         local indep = "treated age age2 educ black hisp married nodegree re74 re75"
+
+. 
+.         pause on
+
+. 
+. *----------------------*
+. *               question 1                *
+. *----------------------*        
+. eststo q1: reg re78 `indep', robust
+
+Linear regression                               Number of obs     =        722
+                                                F(10, 711)        =       2.75
+                                                Prob > F          =     0.0025
+                                                R-squared         =     0.0454
+                                                Root MSE          =     6152.3
+
+------------------------------------------------------------------------------
+             |               Robust
+        re78 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     treated |   818.7003   487.8295     1.68   0.094    -139.0582    1776.459
+         age |  -145.9217   200.7603    -0.73   0.468    -540.0755    248.2322
+        age2 |   2.799479   3.245728     0.86   0.389     -3.57288    9.171837
+        educ |   206.8112   165.4509     1.25   0.212    -118.0195     531.642
+       black |  -1461.261   734.3153    -1.99   0.047    -2902.947   -19.57563
+        hisp |   100.4831   958.5652     0.10   0.917    -1781.474     1982.44
+     married |   133.9094   660.0178     0.20   0.839    -1161.908    1429.726
+    nodegree |   -405.909   752.0756    -0.54   0.590    -1882.464    1070.646
+        re74 |   .0871344   .1061708     0.82   0.412    -.1213114    .2955802
+        re75 |   .0839624   .1188638     0.71   0.480    -.1494036    .3173283
+       _cons |    5648.81   3757.499     1.50   0.133     -1728.31    13025.93
+------------------------------------------------------------------------------
+
+. 
+.         quietly{ 
+
+.                                 
+.                                 
+. *----------------------*
+. *               question 2                *
+. *----------------------*
+. // drop the experimental treated group
+.         drop if treated == 1 & sample == 1
+(297 observations deleted)
+
+. 
+. 
+. *----------------------*
+. *               question 3                *
+. *----------------------*
+. * create treated2 dummy for if they were in the experiment group or not 
+. * everyone is untreated in the sample we have remaining
+. gen treated2 = (sample ==1 )
+
+. 
+. // create the coarse propensity scores 
+. eststo q3a: probit treated2 age age2 educ black hisp married nodegree 
+
+Iteration 0:   log likelihood = -1972.3937  
+Iteration 1:   log likelihood = -1152.9501  
+Iteration 2:   log likelihood = -946.08275  
+Iteration 3:   log likelihood = -919.36768  
+Iteration 4:   log likelihood = -917.89575  
+Iteration 5:   log likelihood =  -917.8945  
+Iteration 6:   log likelihood =  -917.8945  
+
+Probit regression                               Number of obs     =     16,417
+                                                LR chi2(7)        =    2109.00
+                                                Prob > chi2       =     0.0000
+Log likelihood =  -917.8945                     Pseudo R2         =     0.5346
+
+------------------------------------------------------------------------------
+    treated2 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |   .2532387   .0293232     8.64   0.000     .1957664    .3107111
+        age2 |  -.0045319   .0004929    -9.19   0.000    -.0054981   -.0035658
+        educ |   .0168833   .0180737     0.93   0.350    -.0185405     .052307
+       black |   1.989908   .0778422    25.56   0.000      1.83734    2.142476
+        hisp |   .9732994   .1033626     9.42   0.000     .7707124    1.175886
+     married |  -1.101057   .0826205   -13.33   0.000     -1.26299   -.9391236
+    nodegree |   1.132688   .1004559    11.28   0.000     .9357984    1.329578
+       _cons |     -6.358   .4834229   -13.15   0.000    -7.305492   -5.410509
+------------------------------------------------------------------------------
+Note: 727 failures and 0 successes completely determined.
+
+. predict pscorea
+(option pr assumed; Pr(treated2))
+
+. 
+. //create the rich propensity scores
+. eststo q3b: probit treated2 age age2 educ black hisp married nodegree re74 re75 
+
+Iteration 0:   log likelihood = -1972.3937  
+Iteration 1:   log likelihood = -1134.7468  
+Iteration 2:   log likelihood = -901.47114  
+Iteration 3:   log likelihood =  -864.6975  
+Iteration 4:   log likelihood = -862.49864  
+Iteration 5:   log likelihood = -862.48901  
+Iteration 6:   log likelihood = -862.48901  
+
+Probit regression                               Number of obs     =     16,417
+                                                LR chi2(9)        =    2219.81
+                                                Prob > chi2       =     0.0000
+Log likelihood = -862.48901                     Pseudo R2         =     0.5627
+
+------------------------------------------------------------------------------
+    treated2 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |   .3224723    .031638    10.19   0.000     .2604629    .3844817
+        age2 |  -.0054825   .0005302   -10.34   0.000    -.0065216   -.0044433
+        educ |   .0178156   .0182703     0.98   0.330    -.0179934    .0536247
+       black |   1.950403   .0795723    24.51   0.000     1.794444    2.106362
+        hisp |   .9775352   .1061721     9.21   0.000     .7694418    1.185629
+     married |  -.9090639    .086934   -10.46   0.000    -1.079451   -.7386764
+    nodegree |   1.071194   .1039852    10.30   0.000     .8673865    1.275001
+        re74 |  -1.07e-06   8.60e-06    -0.12   0.901    -.0000179    .0000158
+        re75 |  -.0000576   9.56e-06    -6.03   0.000    -.0000764   -.0000389
+       _cons |  -7.108113   .5090983   -13.96   0.000    -8.105928   -6.110299
+------------------------------------------------------------------------------
+Note: 1359 failures and 0 successes completely determined.
+
+. predict pscoreb
+(option pr assumed; Pr(treated2))
+
+. 
+.                 quietly{ //table
+
+. 
+.                                 
+. *----------------------*
+. *               question 4                *
+. *----------------------*
+. 
+. * summarize propensity scores and store the scalars for a table
+. sum pscorea if treated2 == 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     pscorea |     15,992    .0164119    .0654307   9.79e-13   .6872082
+
+.         sca a0mean = r(mean)
+
+.         sca a0min  = r(min)
+
+.         sca a0max  = r(max)
+
+. sum pscorea if treated2 == 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     pscorea |        425    .3873009     .230529   .0000756   .6872082
+
+.         sca a1mean = r(mean)
+
+.         sca a1min  = r(min)
+
+.         sca a1max  = r(max)
+
+. sum pscoreb if treated2 == 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     pscoreb |        425    .4248305    .2459295   1.64e-06   .8024473
+
+.         sca b1mean = r(mean)
+
+.         sca b1min  = r(min)
+
+.         sca b1max  = r(max)
+
+. sum pscoreb if treated2 == 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+     pscoreb |     15,992    .0154465    .0642919   2.08e-16   .7886285
+
+.         sca b0mean = r(mean)
+
+.         sca b0min  = r(min)
+
+.         sca b0max  = r(max)
+
+. 
+. 
+.         
+.         
+. *----------------------*
+. *               question 5                *
+. *----------------------*
+. 
+. foreach i in a b{
+  2.         egen bins`i'=cut(pscore`i'), at(0(0.05)1) icodes 
+  3.                 * put the pscores into bins, binsa is a variable saying what bin they're in
+.         graph bar (count) pscore`i' if bins`i'>0, over(treated2) over(bins`i', label(nolab)) asyvars
+  4.         graph export q4_pscore`i'.png, replace
+  5. }
+(file /Users/emilycase/Desktop/metrics sp22/ps2/q4_pscorea.png written in PNG format)
+(file /Users/emilycase/Desktop/metrics sp22/ps2/q4_pscoreb.png written in PNG format)
+
+. 
+. 
+. *----------------------------*
+. *               question 6 and 7                  *
+. *----------------------------*
+. 
+. * 6: impose the common support condition, without replacement
+. * 7: same, but with replacement: 
+. 
+. 
+. foreach r in nor r{     
+  2.         foreach i in a b{
+  3.                 if "`r'" == "nor" {
+  4.                         display "Without replacement (q6), using pscore`i':"
+  5.                         eststo `r'psmatch2`i': psmatch2 treated2, noreplacement outcome(re78) pscore(psco
+> re`i') neighbor(1) common
+  6.                         } //run the noreplacement psmatch2
+  7.                 else             {
+  8.                         display "With replacement (q7), using pscore`i':"
+  9.                         eststo `r'psmatch2`i': psmatch2 treated2, outcome(re78) pscore(pscore`i') neighbo
+> r(1) common 
+ 10.                         } //run the replacement psmatch2
+ 11.                         
+.                 // look at the _support variable:
+.                 list pscore`i' if _support == 0
+ 12.                 
+.                          
+.                         // store the scalar results for the ATT
+.                         sca `r'_diff_att`i' = r(att)
+ 13.                         sca `r'_se_att`i'        = r(seatt)
+ 14.         
+.                 qui esttab `r'psmatch2`i', se 
+ 15.                         //store the scalar results for the unmatched 
+.                         sca `r'_diff_unm`i' = r(coefs)[1,1]
+ 16.                         sca `r'_se_unm`i'        = r(coefs)[1,2]
+ 17.         }
+ 18. }
+Without replacement (q6), using pscorea:
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re78  Unmatched |  5090.0482   14846.6596  -9756.61142   470.155617   -20.75
+                        ATT |  5090.0482   9529.11811  -4439.06991   486.482153    -9.12
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+           | psmatch2:
+ psmatch2: |   Common
+ Treatment |  support
+assignment | On suppor |     Total
+-----------+-----------+----------
+ Untreated |    15,992 |    15,992 
+   Treated |       425 |       425 
+-----------+-----------+----------
+     Total |    16,417 |    16,417 
+Without replacement (q6), using pscoreb:
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re78  Unmatched |  5090.0482   14846.6596  -9756.61142   470.155617   -20.75
+                        ATT | 5067.39448   7408.17564  -2340.78116   449.369786    -5.21
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: |   psmatch2: Common
+ Treatment |        support
+assignment | Off suppo  On suppor |     Total
+-----------+----------------------+----------
+ Untreated |         0     15,992 |    15,992 
+   Treated |         7        418 |       425 
+-----------+----------------------+----------
+     Total |         7     16,410 |    16,417 
+
+       +----------+
+       |  pscoreb |
+       |----------|
+16093. | .7937457 |
+16221. | .7923265 |
+16240. | .8024473 |
+16251. | .7937858 |
+16252. | .7937858 |
+       |----------|
+16267. | .7996646 |
+16276. | .7895302 |
+       +----------+
+With replacement (q7), using pscorea:
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re78  Unmatched |  5090.0482   14846.6596  -9756.61142   470.155617   -20.75
+                        ATT |  5090.0482   8767.08057  -3677.03237   934.497524    -3.93
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+           | psmatch2:
+ psmatch2: |   Common
+ Treatment |  support
+assignment | On suppor |     Total
+-----------+-----------+----------
+ Untreated |    15,992 |    15,992 
+   Treated |       425 |       425 
+-----------+-----------+----------
+     Total |    16,417 |    16,417 
+With replacement (q7), using pscoreb:
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re78  Unmatched |  5090.0482   14846.6596  -9756.61142   470.155617   -20.75
+                        ATT | 5067.39448   6583.38855  -1515.99407   707.616814    -2.14
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: |   psmatch2: Common
+ Treatment |        support
+assignment | Off suppo  On suppor |     Total
+-----------+----------------------+----------
+ Untreated |         0     15,992 |    15,992 
+   Treated |         7        418 |       425 
+-----------+----------------------+----------
+     Total |         7     16,410 |    16,417 
+
+       +----------+
+       |  pscoreb |
+       |----------|
+16093. | .7937457 |
+16221. | .7923265 |
+16240. | .8024473 |
+16251. | .7937858 |
+16252. | .7937858 |
+       |----------|
+16267. | .7996646 |
+16276. | .7895302 |
+       +----------+
+
+. 
+. 
+. *----------------------*
+. *               question 8                *
+. *----------------------*
+. // create the raw data standardized differences 
+.         // averaging the differences between re74 and re75 by treated2...
+.         // based on the notes formula page 26. 
+. stddiff re74 re75, by(treated2)
+
+------------------------------------------------------------------------------
+             |       treated2=0        |       treated2=1        |
+             | Mean or N     SD or (%) | Mean or N     SD or (%) |  Std Diff
+-------------+-------------------------+-------------------------+------------
+        re74 |     14017        9569.8 |      3672        6521.5 |    1.26323
+        re75 |     13651        9270.4 |      3027        5201.2 |    1.41345
+------------------------------------------------------------------------------
+
+.         // store scalars for table
+.                 sca raw_sdiff_re74 = 100*r(stddiff)[1,1]
+
+.                 sca raw_sdiff_re75 = 100*r(stddiff)[2,1]
+
+.                 
+.                 di "The SDIFF of re74 using raw data is " raw_sdiff_re74
+The SDIFF of re74 using raw data is 126.32348
+
+.                 di "The SDIFF of re75 using raw data is " raw_sdiff_re75
+The SDIFF of re75 using raw data is 141.34534
+
+. 
+. // rematch but using the rich scores single nearest neighbor with replacement
+. // std diff for re74 
+. psmatch2 treated2, outcome(re74) pscore(pscoreb) neighbor(1) common
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re74  Unmatched | 3672.48515   14016.8007  -10344.3156   467.066411   -22.15
+                        ATT |  3733.9861   4475.24661  -741.260515   638.936788    -1.16
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: |   psmatch2: Common
+ Treatment |        support
+assignment | Off suppo  On suppor |     Total
+-----------+----------------------+----------
+ Untreated |         0     15,992 |    15,992 
+   Treated |         7        418 |       425 
+-----------+----------------------+----------
+     Total |         7     16,410 |    16,417 
+
+.         // numerator of the standardized differences formula:
+.         // treated ATT - control ATT 
+.                 sca numerator_74 = r(att)
+
+.                 
+.         // denominator is the pooled sd of the covariate in the treated and untreated samples
+.                 // variance of re74 for treated and untreated 
+.                         sum re74 if treated2 == 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        re74 |        425    3672.485    6521.526          0   39570.68
+
+.                                 sca treatedvar_74 = r(Var)
+
+.                         sum re74 if treated2 == 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        re74 |     15,992     14016.8    9569.796          0   25862.32
+
+.                                 sca untreatvar_74 = r(Var)
+
+.                 // average variances and sqrt to get the pooled sd 
+.                 sca denominator_74   = sqrt( (treatedvar_74 + untreatvar_74)/2)
+
+.                 
+.         // sdiff(re74) using rich scores and single nn with replacement:
+.                 sca sdiff_re74 = 100*(numerator_74 / denominator_74)
+
+.                 di "The SDIFF of re74 using rich scores and single nn with replacement is "sdiff_re74
+The SDIFF of re74 using rich scores and single nn with replacement is -9.0521799
+
+.                 
+. 
+. // std diff for re75
+. psmatch2 treated2, outcome(re75) pscore(pscoreb) neighbor(1) common 
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re75  Unmatched | 3026.68274   13650.8032  -10624.1204   451.566731   -23.53
+                        ATT | 3077.36881   3629.42503  -552.056218   562.743993    -0.98
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: |   psmatch2: Common
+ Treatment |        support
+assignment | Off suppo  On suppor |     Total
+-----------+----------------------+----------
+ Untreated |         0     15,992 |    15,992 
+   Treated |         7        418 |       425 
+-----------+----------------------+----------
+     Total |         7     16,410 |    16,417 
+
+.         // numerator 
+.                 sca numerator_75 = r(att)
+
+.                 
+.         // denominator 
+.                 sum re75 if treated2 == 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        re75 |        425    3026.683     5201.25          0   36941.27
+
+.                         sca treatedvar_75 = r(Var)
+
+.                 sum re75 if treated2 == 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        re75 |     15,992     13650.8    9270.403          0   25243.55
+
+.                         sca untreatvar_75 = r(Var)
+
+.                 sca denominator_75 = sqrt( (treatedvar_75 + untreatvar_75)/2)
+
+.                 
+.         // sdiff(re75) using rich scores and single nn with replacement
+.                 sca sdiff_re75 = 100*(numerator_75/denominator_75)
+
+.                 di "The SDIFF of re75 using rich scores and single nn with replacement is " sdiff_re75
+The SDIFF of re75 using rich scores and single nn with replacement is -7.3446622
+
+. 
+. // calculate the proportionate reduction in the standardized bias (just a percent change?)
+.         // note: I did this by hand first, and so the negatives are kind of wonky. Pretty sure this is right
+>  though. 
+.                 sca biasreduc_74 = round(100*(raw_sdiff_re74 + sdiff_re74)/ raw_sdiff_re74, 0.01)
+
+.                 di "Using rich propensity scores reduced the standardized bias of earnings in 1974 by " bias
+> reduc_74 "%"
+Using rich propensity scores reduced the standardized bias of earnings in 1974 by 92.83%
+
+. 
+.                 sca biasreduc_75 = round(100*(raw_sdiff_re75 + sdiff_re75)/ raw_sdiff_re75, 0.01)
+
+.                 di "Using rich propensity scores reduced the standardized bias of earnings in 1975 by " bias
+> reduc_75 "%"
+Using rich propensity scores reduced the standardized bias of earnings in 1975 by 94.8%
+
+. 
+.                 
+. *----------------------------*
+. *               question 9 and 10         *
+. *----------------------------*
+. foreach q in 9 10{ // loop over question number (llr or kernel)
+  2.         foreach ban in 0.02 0.2 2.0 { //loop over bandwidths
+  3.         
+.                                 * need to number the bandwidths 1 2 and 3
+.                                 if `ban' == 0.02 {
+  4.                                         local bancount = 1
+  5.                                 }
+  6.                                 else if `ban' == 0.2 {
+  7.                                         local bancount = 2
+  8.                                 }
+  9.                                 else {
+ 10.                                         local bancount = 3
+ 11.                                 }
+ 12.         
+.                 * tell it which psmatch to do:
+.                 if `q' == 10{ //q10 is llr
+ 13.                         display "This match is made using linear (q10) matches of bandwidth `ban':"
+ 14.                         eststo q10_`bancount': psmatch2 treated2, outcome(re78) pscore(pscoreb) llr bwidt
+> h(`ban') common
+ 15.                         
+.                 }
+ 16.                 else { //q9 is kernel
+ 17.                         display "This match is made using kernel (q9) matches of bandwidth `ban':"
+ 18.                         eststo q9_`bancount': psmatch2 treated2, outcome(re78) pscore(pscoreb) kernel ker
+> neltype(normal) bwidth(`ban') common
+ 19.                         
+.                 }
+ 20.                 
+.                 quietly{
+ 21.                 * some stuff for making tables:
+.                         //store scalars of att for table
+.                         sca q`q'_diff_att`bancount' = r(att)
+ 22.                         sca q`q'_se_att`bancount'        = r(seatt)     
+ 23.                         
+.                         //store the scalar results for the unmatched for table
+.                         esttab q`q'_`bancount', se
+ 24.                         sca q`q'_diff_unm`bancount' = r(coefs)[1,1]
+ 25.                         sca q`q'_se_unm`bancount'        = r(coefs)[1,2]
+ 26.                 }
+ 27.         }
+ 28. }
+This match is made using kernel (q9) matches of bandwidth 0.02:
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re78  Unmatched |  5090.0482   14846.6596  -9756.61142   470.155617   -20.75
+                        ATT | 5067.39448   7416.48625  -2349.09177   658.531426    -3.57
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: |   psmatch2: Common
+ Treatment |        support
+assignment | Off suppo  On suppor |     Total
+-----------+----------------------+----------
+ Untreated |         0     15,992 |    15,992 
+   Treated |         7        418 |       425 
+-----------+----------------------+----------
+     Total |         7     16,410 |    16,417 
+This match is made using kernel (q9) matches of bandwidth 0.2:
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re78  Unmatched |  5090.0482   14846.6596  -9756.61142   470.155617   -20.75
+                        ATT | 5067.39448   12110.8234  -7043.42897     337.0603   -20.90
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: |   psmatch2: Common
+ Treatment |        support
+assignment | Off suppo  On suppor |     Total
+-----------+----------------------+----------
+ Untreated |         0     15,992 |    15,992 
+   Treated |         7        418 |       425 
+-----------+----------------------+----------
+     Total |         7     16,410 |    16,417 
+This match is made using kernel (q9) matches of bandwidth 2.0:
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re78  Unmatched |  5090.0482   14846.6596  -9756.61142   470.155617   -20.75
+                        ATT | 5067.39448   14839.5273  -9772.13283   289.251216   -33.78
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: |   psmatch2: Common
+ Treatment |        support
+assignment | Off suppo  On suppor |     Total
+-----------+----------------------+----------
+ Untreated |         0     15,992 |    15,992 
+   Treated |         7        418 |       425 
+-----------+----------------------+----------
+     Total |         7     16,410 |    16,417 
+This match is made using linear (q10) matches of bandwidth 0.02:
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re78  Unmatched |  5090.0482   14846.6596  -9756.61142   470.155617   -20.75
+                        ATT | 5067.39448   7048.27098   -1980.8765   707.616814    -2.80
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: |   psmatch2: Common
+ Treatment |        support
+assignment | Off suppo  On suppor |     Total
+-----------+----------------------+----------
+ Untreated |         0     15,992 |    15,992 
+   Treated |         7        418 |       425 
+-----------+----------------------+----------
+     Total |         7     16,410 |    16,417 
+This match is made using linear (q10) matches of bandwidth 0.2:
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re78  Unmatched |  5090.0482   14846.6596  -9756.61142   470.155617   -20.75
+                        ATT | 5067.39448   7488.81187  -2421.41739   707.616814    -3.42
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: |   psmatch2: Common
+ Treatment |        support
+assignment | Off suppo  On suppor |     Total
+-----------+----------------------+----------
+ Untreated |         0     15,992 |    15,992 
+   Treated |         7        418 |       425 
+-----------+----------------------+----------
+     Total |         7     16,410 |    16,417 
+This match is made using linear (q10) matches of bandwidth 2.0:
+----------------------------------------------------------------------------------------
+        Variable     Sample |    Treated     Controls   Difference         S.E.   T-stat
+----------------------------+-----------------------------------------------------------
+            re78  Unmatched |  5090.0482   14846.6596  -9756.61142   470.155617   -20.75
+                        ATT | 5067.39448   4073.51859   993.875888   707.616814     1.40
+----------------------------+-----------------------------------------------------------
+Note: S.E. does not take into account that the propensity score is estimated.
+
+ psmatch2: |   psmatch2: Common
+ Treatment |        support
+assignment | Off suppo  On suppor |     Total
+-----------+----------------------+----------
+ Untreated |         0     15,992 |    15,992 
+   Treated |         7        418 |       425 
+-----------+----------------------+----------
+     Total |         7     16,410 |    16,417 
+
+. 
+. 
+. *----------------------*
+. *               question 11       *
+. *----------------------*
+. eststo clear //clear the stored regressions
+
+. 
+. eststo: reg re78 treated2 age age2 educ black hisp married nodegree re74 re75
+
+      Source |       SS           df       MS      Number of obs   =    16,417
+-------------+----------------------------------   F(10, 16406)    =   1535.42
+       Model |  7.4527e+11        10  7.4527e+10   Prob > F        =    0.0000
+    Residual |  7.9632e+11    16,406  48538433.6   R-squared       =    0.4834
+-------------+----------------------------------   Adj R-squared   =    0.4831
+       Total |  1.5416e+12    16,416  93907732.1   Root MSE        =      6967
+
+------------------------------------------------------------------------------
+        re78 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    treated2 |   -1853.39   383.0713    -4.84   0.000    -2604.251   -1102.528
+         age |  -235.5257   40.53634    -5.81   0.000    -314.9813   -156.0701
+        age2 |   1.857809    .552854     3.36   0.001     .7741547    2.941463
+        educ |   163.3092   28.41906     5.75   0.000     107.6048    219.0137
+       black |  -832.3813   208.6633    -3.99   0.000    -1241.384   -423.3786
+        hisp |  -114.1536   215.2908    -0.53   0.596    -536.1469    307.8398
+     married |   199.4396   148.0451     1.35   0.178    -90.74481     489.624
+    nodegree |   296.5755   176.6153     1.68   0.093    -49.60968    642.7608
+        re74 |   .2912688   .0120995    24.07   0.000     .2675524    .3149852
+        re75 |   .4710542   .0120739    39.01   0.000     .4473881    .4947202
+       _cons |    7757.18   726.8875    10.67   0.000     6332.402    9181.959
+------------------------------------------------------------------------------
+(est1 stored)
+
+.                                         
+. 
+.         // predicted y hats for the above reg 
+.    predict yhat78
+(option xb assumed; fitted values)
+
+.         
+. 
+. *----------------------*
+. *               question 12       *
+. *----------------------*
+. eststo: reg re78 age age2 educ black hisp married nodegree re74 re75 if treated2 == 0
+
+      Source |       SS           df       MS      Number of obs   =    15,992
+-------------+----------------------------------   F(9, 15982)     =   1611.69
+       Model |  7.0811e+11         9  7.8679e+10   Prob > F        =    0.0000
+    Residual |  7.8021e+11    15,982    48817800   R-squared       =    0.4758
+-------------+----------------------------------   Adj R-squared   =    0.4755
+       Total |  1.4883e+12    15,991  93072162.5   Root MSE        =      6987
+
+------------------------------------------------------------------------------
+        re78 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |  -252.0485   41.43196    -6.08   0.000    -333.2598   -170.8372
+        age2 |   2.040805   .5638224     3.62   0.000       .93565    3.145961
+        educ |   166.5983   28.71426     5.80   0.000     110.3151    222.8815
+       black |  -773.8793   215.0483    -3.60   0.000    -1195.398   -352.3605
+        hisp |  -168.2284   219.4738    -0.77   0.443    -598.4218    261.9649
+     married |   244.1442   150.4854     1.62   0.105    -50.82401    539.1125
+    nodegree |   330.6767   179.4006     1.84   0.065    -20.96861    682.3219
+        re74 |   .2988693   .0122474    24.40   0.000     .2748631    .3228755
+        re75 |   .4699589   .0121713    38.61   0.000     .4461017     .493816
+       _cons |   7908.362   740.4669    10.68   0.000     6456.964     9359.76
+------------------------------------------------------------------------------
+(est2 stored)
+
+. 
+. * predicted y hats for the above reg, which is just the CPS group
+. predict yhat78_cps if treated2 == 1
+(option xb assumed; fitted values)
+(15,992 missing values generated)
+
+. gen diff12 = re78 - yhat78_cps 
+(15,992 missing values generated)
+
+. sum diff12
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      diff12 |        425   -1851.549    6177.699   -24476.5   32208.36
+
+. quietly{
+invalid %format
+
+. 
+. 
+.         // table for 11 and 12: 
+.         #delimit ;
+delimiter now ;
+.         qui esttab using "tables/q12.tex", replace
+>                  booktabs nostar nonum 
+>                  b(%7.2fc) se(2)
+>                  title(Using regressions instead of matching (questions 11 and 12)\label{q12})
+>                  mtitles("Pooled" "CPS only");
+
+.         #delimit cr
+delimiter now cr
+.         
+.         
+. *----------------------*
+. *               question 13       *
+. *----------------------*
+. * inverse probability weighting
+. 
+. // ATT, weights sum to 1: (page 19 in notes)
+. 
+.         // some types of obs counts 
+.                 foreach i in ttl 0 1{
+  2.                         if "`i'" == "ttl"  {
+  3.                                 count
+  4.                         }
+  5.                         else {
+  6.                                 count if treated2 == `i'
+  7.                         }
+  8.                         sca n`i' = r(N) 
+  9.                 }
+  16,417
+  15,992
+  425
+
+.                 
+.                         
+. 
+.         // treated re78 outcomes:
+.                 gen re78_control = re78*treated2
+
+.                 
+.                 // sum of all the treated re78:
+.                 total(re78_control)
+
+Total estimation                  Number of obs   =     16,417
+
+--------------------------------------------------------------
+             |      Total   Std. Err.     [95% Conf. Interval]
+-------------+------------------------------------------------
+re78_control |    2163270   156814.9       1855896     2470645
+--------------------------------------------------------------
+
+.                 
+.                 // average re78 for treated:
+.                 sca a = _b[re78_control] / n1
+
+.                 
+.         // working towards the second term in the formula
+.                 sca phat = n1 / nttl // %of obvs that are treated
+
+.                 sca b   = (1 - phat) / phat
+
+.                 
+.                 gen x = (b*pscoreb*re78*(1-treated2) )/ (1-pscoreb)
+
+.                 
+.                 total(x)
+
+Total estimation                  Number of obs   =     16,417
+
+--------------------------------------------------------------
+             |      Total   Std. Err.     [95% Conf. Interval]
+-------------+------------------------------------------------
+           x |   1.04e+08    5791428      9.28e+07    1.15e+08
+--------------------------------------------------------------
+
+.                 sca c = _b[x] / n0
+
+.                 
+.         // finally, the ATT:
+.                 local att_ipw = a - c
+
+.                 di %7.2fc `att_ipw'
+-1420.38
+
+.                 
+.                 quietly{
+
+.                 
+. // ATT, normalize the weights to sum to 1 (second formula on page 19)
+. 
+.         gen y = (pscoreb *(1-treated2))/(1-pscoreb)
+
+.         total(y)
+
+Total estimation                  Number of obs   =     16,417
+
+--------------------------------------------------------------
+             |      Total   Std. Err.     [95% Conf. Interval]
+-------------+------------------------------------------------
+           y |   390.4502   18.29302      354.5939    426.3065
+--------------------------------------------------------------
+
+.         gen z = (_b[y]/n0)^(-1) * ((pscoreb * re78 *(1-treated2))/(1-pscoreb))
+
+.         total(z)
+
+Total estimation                  Number of obs   =     16,417
+
+--------------------------------------------------------------
+             |      Total   Std. Err.     [95% Conf. Interval]
+-------------+------------------------------------------------
+           z |   1.13e+08    6303894      1.01e+08    1.26e+08
+--------------------------------------------------------------
+
+.                 
+.         // finally, the ATT rescaled/normalized
+.                 local att_ipwnorm = a - _b[z]/n0
+
+.                 di `att_ipwnorm'
+-1996.4672
+
+. 
+. 
+.                                         quietly{
+
+.                 
+. log close
+      name:  <unnamed>
+       log:  /Users/emilycase/Desktop/metrics sp22/ps2/merics_ps2_log.log
+  log type:  text
+ closed on:   8 Mar 2022, 23:28:03
+--------------------------------------------------------------------------------------------------------------

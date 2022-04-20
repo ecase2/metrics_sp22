@@ -1,0 +1,50 @@
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Problems 15 \& 16\label{q16}}
+\begin{tabular}{l*{4}{c}}
+\toprule
+                    &\multicolumn{1}{c}{(1)}&\multicolumn{1}{c}{(2)}&\multicolumn{1}{c}{(3)}&\multicolumn{1}{c}{(4)}\\
+                    &\multicolumn{1}{c}{LPM}&\multicolumn{1}{c}{Squared residuals}&\multicolumn{1}{c}{Probit}&\multicolumn{1}{c}{\texttt{hetprobit}}\\
+\midrule
+main                &                     &                     &                     &                     \\
+Client age          &     -0.0000         &      0.0002         &      0.0002         &     -0.1123         \\
+                    &    (0.0023)         &    (0.0015)         &    (0.0086)         &    (0.1375)         \\
+\addlinespace
+Client marital status&      0.0117         &      0.0077         &      0.0495         &      0.1288         \\
+                    &    (0.0519)         &    (0.0350)         &    (0.2141)         &    (0.8459)         \\
+\addlinespace
+Client education    &     -0.0037         &     -0.0021         &     -0.0146         &     -0.3106         \\
+                    &    (0.0041)         &    (0.0027)         &    (0.0166)         &    (0.2555)         \\
+\addlinespace
+Household size      &     -0.0113         &     -0.0079         &     -0.0476         &     -0.2261         \\
+                    &    (0.0093)         &    (0.0063)         &    (0.0379)         &    (0.1970)         \\
+\addlinespace
+Household income    &      0.0000         &      0.0000         &      0.0000         &      0.0001         \\
+                    &    (0.0000)         &    (0.0000)         &    (0.0000)         &    (0.0001)         \\
+\addlinespace
+Client is Muslim    &     -0.0076         &     -0.0063         &     -0.0326         &     -0.1792         \\
+                    &    (0.0365)         &    (0.0240)         &    (0.1468)         &    (0.5843)         \\
+\addlinespace
+Client is Hindi     &     -0.0275         &     -0.0168         &     -0.1100         &     -0.3443         \\
+                    &    (0.0510)         &    (0.0356)         &    (0.2152)         &    (0.9619)         \\
+\addlinespace
+Treated             &      0.0426         &      0.0282         &      0.1751         &      0.9150         \\
+                    &    (0.0335)         &    (0.0230)         &    (0.1419)         &    (0.7867)         \\
+\addlinespace
+Constant            &      0.1994         &      0.1505         &     -0.8527         &      1.7151         \\
+                    &    (0.1169)         &    (0.0771)         &    (0.4592)         &    (3.5729)         \\
+\midrule
+lnsigma             &                     &                     &                     &                     \\
+Client age          &                     &                     &                     &      0.0285         \\
+                    &                     &                     &                     &    (0.0196)         \\
+\addlinespace
+Client education    &                     &                     &                     &      0.0694         \\
+                    &                     &                     &                     &    (0.0474)         \\
+\midrule
+Observations        &         532         &         532         &         532         &         532         \\
+\(R^{2}\)           &       0.008         &       0.008         &                     &                     \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{5}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular}
+\end{table}
