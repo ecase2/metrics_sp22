@@ -1,0 +1,170 @@
+\documentclass[12pt]{article}
+\input{../../tex/preamble_basic.tex}
+\hbadness=99999
+
+
+\begin{document}
+    
+\section*{Part 1: analytic exercises}
+\subsection*{Question 1}
+Ability is unobserved and distributed $A \sim U[0,1]$. Schooling is our ``treatment.'' Then potential earning outcomes are 
+    \begin{align*}
+        Y_1 & = 1 + 0.5A \\
+        Y_0 & = A        
+    \end{align*}
+Someone is treated with schooling if 
+    \[D = \mathbbm{1}\{ A - 0.5 \ge 0 \} \]
+
+\begin{enumerate}
+    \item[(a)] The average treatment effect is 
+        \begin{align*}
+            ATE & = \E [ Y_1 - Y_0 ]     \\
+                & = \E [ 1 + 0.5A - A]   \\
+                & = 1 - (0.5) \E[A]      \\
+                & = 3/4
+        \end{align*} 
+    \item[(b)] The fraction of the population who takes the treatment is 
+        \begin{align*}
+            Pr(A - 0.5 \ge 0) & = Pr(A \ge 0.5)     \\
+                              & = 1 - Pr(A \leq 0.5)\\
+                              & = 1/2
+        \end{align*}  
+    \item[(c)] The maximum treatment effect happens if $A=0$. Then $Y_1 = 1$ and $Y_0 = 0$, so the maximum treatment effect is 1. Analogously, if $A=1$, then $Y_1 = 3/2$ and $Y_0 = 1$, so the minimum treatment effect is 1/2. 
+    \item[(d)] If instead $A\sim N(0,1)$, then there are no lower or upper bounds on values that $A$ can take. Therefore the maximum treatment effect is positive infinity, and the minimum is negative infinity. \fix{this seems odd}
+    \item[(e)] Returning to the assumption that $A\sim U[0,1]$, the average treatment effect on the treated is 
+        \begin{align*}
+            ATET & = \E[Y_1 - Y_0 | D = 1]          \\
+                 & = \E[Y_1 - Y_0 | A \ge 0.5]      \\
+                 & = 1 - (0.5)\E[A | A \ge 0.5]     \\
+                 & = 1 - 3/8 = 5/8 
+        \end{align*}
+        and the average treatment effect on the untreated is 
+        \begin{align*}
+            ATEU & = \E[Y_1 - Y_0 | D = 0]          \\
+                 & = 1 - (0.5)\E[A | A \leq 0.5]    \\
+                 & = 1 - 1/8 = 7/8
+        \end{align*}
+    \item[(f)] The ATEU is larger than the ATET because we aren't treating people who would have \emph{larger} benefits from being treated. 
+    \item[(g)] The OLS estimand is 
+        \begin{align*}
+            \beta_{OLS} & = \E[Y_1 | D=1] - \E[Y_0 | D=0]       \\
+                        & = \E[1 + 0.5A | A>0.5] - \E[A | A<0.5]\\
+                        & = 1 + (1/2)(3/4) - (1/4)              \\
+                        & = 9/8
+        \end{align*}
+    \item[(h)] The OLS estimand is biased upwards because it includes not just the ATE, but also a negative selection bias of $-3/8$:\footnote{OLS = ATE - SB} 
+        \begin{align*}
+            SB & = \E[Y_0 | D=1] - \E[Y_1 | D=0]         \\
+               & = \E[A | A> 0.5] - \E[1 + 0.5A | A>0.5] \\
+               & = 3/4 - 1 - 1/8                         \\
+               & = -3/8
+        \end{align*}
+        This comes from the fact that we could write the ATE as\footnote{The 0.5 comes from the fact that half of the population has $A>0.5$, and half does not.}
+        \[ATE = 0.5(\E[Y_1 | D=1] - \E[Y_0 | D=1] + \E[Y_1 | D=0]  - \E[Y_0 | D=0]) \]
+\end{enumerate}
+
+
+\subsection*{Question 2}
+Assume a potential outcomes model with utility $V = \delta_0 + \delta_1 Z + U_V$, where $Z \in \{0,1\}$ is an instrument for some treatment $D$.  
+\begin{enumerate}
+    \item[(a)] Angrist and Imbens' monotonicity assumption basically says that there cannot be any defiers, so we want to check if it is possible for someone to choose $D=0$ when $Z=1$ \emph{and} $D=1$ when $Z=0$, which would constitute ``defying'' the instrument. If $Z=1$, then someone would choose the treatment when:
+        \begin{align*}
+            V(Z = 1) & \geq 0                   \\
+            \delta_0 + \delta_1 + U_V & \geq 0  \\
+            U_V & \geq - \delta_0 - \delta_1
+        \end{align*}
+        If $Z=0$, then someone would choose the treatment when:
+        \begin{align*}
+            V(Z = 0) & \geq 0                   \\
+            \delta_0 + U_V & \geq 0             \\
+            U_V & \geq - \delta_0 
+        \end{align*}
+        If $\delta_1 \geq 0$, then $U_V \geq - \delta_0 \geq - \delta_0 - \delta_1$, and the person would choose treatment no matter what $Z$ is, so they cannot be a defier, (they are an always-taker). 
+        If $\delta_1 \leq 0$, then $U_V \leq - \delta_0 \leq - \delta_0 - \delta_1$, and the person would never choose the treatment, regardless of $Z$, so they cannot be a defier, (they are a never-taker).
+    \item[(b)] This monotonicity assumption would not hold if $\delta_1$ was heterogeneous among agents, or if the instrument affects $U_V$ somehow:
+        \[ V = \delta_0 + \delta_1 Z + U_V(Z) \]
+        \fix{might be something better than this idk}
+\end{enumerate}
+
+
+\subsection*{Question 3}
+Let $U_V \sim U[-2,2]$ and the potential outcomes model utility be $V = Z + U_V$, where $Z \in \{0,1\}$ is an instrument. 
+\\\\
+Note that someone chooses the treatment when $V \geq 0 \implies U_V \geq -Z$. Then someone with $Z=1$ chooses the treatment when $U_V \geq -1$, and someone with $Z = 0$ chooses the treatment when $U_V \geq 0$. 
+\begin{enumerate}
+    \item[(a)] \emph{Compliers} choose the treatment when $Z=1$ and do not choose the treatment when $Z=0$, so we get 
+        \[ U_V \geq -1 \wedge U_V \leq 0 \implies U_V \in [-1,0] .\]
+        \emph{Defiers} do the opposite of what their instrument is telling them to, so
+        \[ U_V \leq -1 \wedge U_V \geq 0 \]
+        which is not possible, so there are no defiers. \\
+        \\
+        \emph{Always-takers} always choose the treatment, so 
+        \[ U_V \geq -1 \wedge U_V \geq 0 \implies U_V \in [0,2].\]
+        Finally, \emph{Never-takers} never choose the treatment, so
+        \[ U_V \leq -1 \wedge U_V \leq 0 \implies U_V \in [-2,-1].\]
+    \item[(b)] Because we are using the uniform distribution, it is straight-forward to see that a quarter of the population complies, a quarter never takes the treatment, and a half always take the treatment. 
+\end{enumerate}
+
+
+\subsection*{Question 4}
+There are two types in the population. 
+\\\\
+\emph{Type 1:}
+\begin{itemize}
+    \item 30\% of the population
+    \item treatment effect $\Delta = 2$
+    \item utility given by $V_1 = Z + U_V$, where $U_V \sim U[-1,1]$
+\end{itemize}
+
+\emph{Type 2:}
+\begin{itemize}
+    \item 70\% of the population
+    \item treatment effect $\Delta = -1$
+    \item utility given by $V_1 = 2Z + U_V$, where $U_V \sim U[-1,1]$
+\end{itemize}
+
+The instrument $Z \in \{0,1\}$ and equals 1 with half probability. Someone is treated ($D=1$) when their utility is greater than zero. It will be helpful to consider both of the types as we did in problem 3 part a. Type 1 will be treated when 
+    \[ Z + U_V \geq 0. \]
+If $Z = 1$, type 1 is treated when $U_V \geq - 1$. If $Z= 0$, type 1 is treated when $U_V \geq 0$. Therefore 
+\begin{itemize}
+    \item type 1 \emph{compliers} have $U_V \in [-1,0]$,
+    \item type 1 \emph{defiers} do not exist (would require $U_V \le -1$, which is not possible),
+    \item type 1 \emph{always-takers} have $U_V \in [0,1]$, and 
+    \item type 1 \emph{never-takers} also do not exist. 
+\end{itemize}
+Type 2 will be treated when 
+    \[ 2Z + U_V \geq 0 .\]
+If $Z = 1$, type 2 is treated when $U_V \geq - 2$. If $Z= 0$, type 1 is treated when $U_V \geq 0$. Therefore 
+\begin{itemize}
+    \item type 2 \emph{compliers} have $U_V \in [-1,0]$,
+    \item type 2 \emph{defiers} do not exist (would require $U_V \le -2$, which is not possible),
+    \item type 2 \emph{always-takers} have $U_V \in [0,1]$, and 
+    \item type 2 \emph{never-takers} also do not exist. 
+\end{itemize}
+Thus half the population, regardless of type, are compliers, and half are always-takers. This also implies that if the instrument $Z=1$, $D=1$, and everyone who is supposed to be treated gets treated (we just also have some people who are treated when they weren't intended to be). 
+
+\begin{enumerate}
+    \item[(a)] Since half the population is an always-taker, the other half a complier, and the probability of $Z=1$ is half, then 75\% of the population will have $D=1$ and receive their type-specific treatment effect. The average treatment effect is \fix{unsure of this...??}
+          \[ ATE = 0.75[(0.3)(2) + (0.7)(-1)] = -0.075 \]
+    \item[(b)] The probability of being treated conditional on $Z=1$ is 1, because there are only always-takers and compliers.  
+            \begin{align*}
+                Pr(D=1 | Z=1) & = 1 
+            \end{align*} 
+        The probability of being treated, conditional on $Z=1$, is 1/2, because half of the population is an always taker. 
+            \begin{align*}
+              Pr(D=1 | Z=0) & = 0.5 
+            \end{align*}
+    \item[(c)] The local average treatment effect (LATE) is the average intent to treat (ITT) over the share of compliers (which is half in this case). The ITT population is half, so \fix{UNSURE!!!!}
+        \[LATE = \frac{ITT}{1/2} = \frac{0.5[(0.3)(2) + (0.7)(-1)]}{1/2}
+               = 2(-0.05) = -0.1\]
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Part 2: monte carlo exercises}
+\subsection*{Question 1}
+\subsection*{Question 2}
+
+
+
+\end{document}
